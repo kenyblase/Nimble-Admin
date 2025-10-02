@@ -6,7 +6,7 @@ export default function MainLayout() {
   return (
     <div className="main-layout">
       <div className="flex">
-        <div className='min-w-16'>
+        <div className='min-w-60'>
           <Sidebar />
         </div>
         <main className="flex flex-col w-full px-4">
