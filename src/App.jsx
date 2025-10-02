@@ -40,7 +40,7 @@ function App() {
         </Route>
 
         <Route element={<ProtectedRoute><MainLayout /></ProtectedRoute>}>
-          <Route path="/" element={<ProtectedRoute></ProtectedRoute>} />
+          <Route path="/" element={<ProtectedRoute><div>Dashboard</div></ProtectedRoute>} />
         </Route>
 
       </Routes>

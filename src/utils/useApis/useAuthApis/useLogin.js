@@ -27,7 +27,7 @@ export const useLogin = () => {
 
     const response = await mutation.mutateAsync(data);  
     
-    return response.data
+    return response.admin
   };
 
   return {

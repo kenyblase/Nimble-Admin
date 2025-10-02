@@ -1,18 +1,19 @@
 import { useState } from "react";
-import { User, ChevronRightCircleIcon } from 'lucide-react'
+import { User, ChevronRightCircleIcon, Lock } from 'lucide-react'
 import { toast } from "react-hot-toast";
-import BlueGradientButton from "../../components/BlueGradientButton";
 import Input from "../../components/Input";
-import { useEmailCheck } from "../../utils/useApis/useAuthApis/useEmailCheck";
+import { useLogin } from "../../utils/useApis/useAuthApis/useLogin";
 import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "../../utils/api/store/useAuthStore";
+import LoadingSpinner from "../../components/LoadingSpinner";
 
 export default function Login() {
   const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-  const {emailCheck, isCheckingEmail} = useEmailCheck()
+  const {login, isLoggingIn} = useLogin()
 
-  const {setAdmin} = useAuthStore()
+  const {setAndAuthenticateAdmin} = useAuthStore()
 
   const navigate = useNavigate()
 
@@ -23,34 +24,27 @@ export default function Login() {
       return;
     }
 
-    const admin = await emailCheck({email})
-
-    setAdmin(admin)
-
-    if(admin.firstLogin){
-      navigate('./set-new-password')
-    }else{
-      navigate('./verify-password')
+    if (!password.trim()) {
+      toast.error("Password is required");
+      return;
     }
+
+    const admin = await login({email, password})
+
+    setAndAuthenticateAdmin(admin)
+
+    navigate('/', {replace: true})
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-white">
-      <div className="w-[35%] min-w-md p-10 rounded-lg shadow-2xl border border-gray-200 text-center">
-        <div className="flex justify-center mb-6">
-          <div className="w-32 h-32 rounded-lg border border-[#BFBFBF] flex items-center justify-center text-gray-400 text-3xl">
-            <svg width="97" height="97" viewBox="0 0 97 97" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M48.9067 48.5C59.9524 48.5 68.9067 39.5457 68.9067 28.5C68.9067 17.4543 59.9524 8.5 48.9067 8.5C37.861 8.5 28.9067 17.4543 28.9067 28.5C28.9067 39.5457 37.861 48.5 48.9067 48.5Z" fill="#1C1C1C"/>
-              <path d="M48.9068 58.5C28.8668 58.5 12.5468 71.94 12.5468 88.5C12.5468 89.62 13.4268 90.5 14.5468 90.5H83.2668C84.3868 90.5 85.2668 89.62 85.2668 88.5C85.2668 71.94 68.9468 58.5 48.9068 58.5Z" fill="#1C1C1C"/>
-            </svg>
-          </div>
-        </div>
+      <div className="min-w-md p-10 rounded-lg shadow-2xl border border-gray-200 text-center">
 
         <h1 className="text-2xl text-[#2E2E2E] font-semibold mb-1">Welcome to the Admin Portal</h1>
-        <p className="text-sm text-[#757575] font-semibold mb-6">Enter your email to continue to dashboard</p>
+        <p className="text-sm text-[#757575] font-semibold mb-6">Enter your email and password to continue to dashboard</p>
 
-        <form className="text-left space-y-4">
-          <label htmlFor="email" className="font-semibold text-xl text-[#757575]">
+        <div className="text-left space-y-4">
+          <label htmlFor="email" className="font-semibold text-lg text-[#757575]">
             Email Address
           </label>
           <Input
@@ -58,19 +52,28 @@ export default function Login() {
             placeholder='Enter your email address here'
             value={email}
             handleChange={(e)=>setEmail(e.target.value)}
+            otherStyles='mt-2'
           />
 
-          <div className="flex items-center justify-center">
-            <BlueGradientButton
-                icon={<ChevronRightCircleIcon color="white"/>}
-                text={'Next'}
-                isLoading={isCheckingEmail}
-                width={50}
-                reverse={true}
-                handleClick={handleSubmit}
-              />
-          </div>
-        </form>
+        </div>
+
+        <div className="text-left space-y-4">
+          <label htmlFor="email" className="font-semibold text-lg text-[#757575]">
+            Password
+          </label>
+          <Input
+            icon={Lock}
+            placeholder='Enter your password here'
+            value={password}
+            handleChange={(e)=>setPassword(e.target.value)}
+            otherStyles='mt-2'
+          />
+
+        </div>
+
+        <div className="flex justify-center">
+          <button onClick={handleSubmit} className="flex items-center bg-[#3652AD] text-[#FFFFFF] text-base justify-center px-10 py-3 w-1/2 rounded-full">{isLoggingIn ? <LoadingSpinner size='size-6'/> : 'Log In'}</button>
+        </div>
       </div>
     </div>
   );

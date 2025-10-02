@@ -6,7 +6,7 @@ export const authApi = {
     return api.post("/auth/admin-set-password", data);
   },
   login: async (api, data) => {
-    return api.post("/auth/admin-login", data);
+    return api.post("/admin/login", data);
   },
   register: async (api, data) => {
     return api.post("/auth/admin-signup", data);

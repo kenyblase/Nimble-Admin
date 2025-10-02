@@ -10,7 +10,7 @@ export const useAuthStore = create(
       setAdmin: (data) => set({ admin: data }),
       clearAdmin: () => set({ admin: null }),
 
-      loginSuccess: (adminData) =>
+      setAndAuthenticateAdmin: (adminData) =>
         set({ admin: adminData, isAuthenticated: true }),
 
       logout: () =>
