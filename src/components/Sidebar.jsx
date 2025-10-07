@@ -26,7 +26,7 @@ const Sidebar = () => {
 
     const topNavItems = [
     { to: "/", label: "Dashboard", icon: LayoutGrid },
-    { to: "/list", label: "Listings & ads", icon: List },
+    { to: "/listings", label: "Listings & ads", icon: List },
     { to: "/documents", label: "Order", icon: FileText },
     { to: "/users", label: "Users", icon: Users },
     { to: "/tasks", label: "Transactions", icon: ListOrdered },
