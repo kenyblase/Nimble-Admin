@@ -8,7 +8,7 @@ const Navbar = () => {
   const {admin} = useAuthStore()
   const notificationCount = 100
   return (
-    <div className='h-18 w-full gap-2 flex justify-between items-center px-10 py-4'>
+    <div className='h-18 w-full gap-2 flex justify-between items-center py-4'>
       <div className='w-80 mt-6'>
       <Input
         icon={Search}
