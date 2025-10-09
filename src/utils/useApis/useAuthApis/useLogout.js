@@ -10,7 +10,7 @@ export const useLogout = () => {
 
   const logout = async () => {
     try {
-      await api.post('/auth/admin-logout')
+      await api.post('/auth/logout')
       clearAdmin();
       queryClient.invalidateQueries({ queryKey: ['admin'] });
       toast.success('logged out successfully')
@@ -19,5 +19,5 @@ export const useLogout = () => {
     }
   };
 
-  return logout;
+  return {logout};
 };

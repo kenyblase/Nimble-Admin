@@ -20,8 +20,9 @@ import {
   LayoutDashboard
 } from "lucide-react"
 import { useState } from 'react';
+import { useLogout } from '../utils/useApis/useAuthApis/useLogout';
 const Sidebar = () => {
-    const {admin} = useAuthStore()
+    const {logout} = useLogout()
     const [open, setOpen] = useState(false);
 
     const topNavItems = [
@@ -31,7 +32,7 @@ const Sidebar = () => {
     { to: "/users", label: "Users", icon: Users },
     { to: "/tasks", label: "Transactions", icon: ListOrdered },
     { to: "/calendar", label: "Payout", icon: ArrowRightSquare },
-    { to: "/apps", label: "Categories", icon: LayoutDashboard },
+    { to: "/categories", label: "Categories", icon: LayoutDashboard },
     { to: "/messages", label: "Supports & Appeals", icon: Headset },
     { to: "/analytics", label: "Analytics", icon: BarChart3 },
     { to: "/info", label: "Report and security", icon: AlertOctagon },
@@ -47,8 +48,7 @@ const Sidebar = () => {
   ];
 
   const bottomNavItems = [
-    { to: "/settings", label: "Settings", icon: Settings },
-    { to: "/logout", label: "Logout", icon: LogOut },
+    { to: "/settings", label: "Settings", icon: Settings }
   ]
   return (
     <div className='fixed w-60 h-screen border-2 border-[#F5F5F5] flex flex-col items-center p-6 gap-8'>
@@ -118,6 +118,11 @@ const Sidebar = () => {
                     )}
                     </NavLink>
                 ))}
+
+                <div onClick={logout} className='flex items-center gap-3 p-3 rounded-lg transition-colors cursor-pointer hover:bg-gray-100'>
+                    <LogOut size={16} />
+                    <p className="text-sm">Logout</p>
+                </div>
             </div>
              
         </div>

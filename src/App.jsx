@@ -6,11 +6,15 @@ import MainLayout from './layouts/mainLayout'
 
 import Login from './pages/auth/Login'
 
+import Home from './pages/dashboard/home';
+import Categories from './pages/dashboard/categories';
+import CreateCategory from './pages/dashboard/createCategory';
+
 import { useCheckAuth } from './utils/useApis/useAuthApis/useCheckAuth';
 import { useAuthStore } from './utils/api/store/useAuthStore';
 
 import LoadingSpinner from './components/LoadingSpinner'
-import Home from './pages/dashboard/home';
+import Listings from './pages/dashboard/listings';
 
 const ProtectedRoute = ({ children }) => {
   const admin = useAuthStore((state) => state.admin);
@@ -42,6 +46,9 @@ function App() {
 
         <Route element={<ProtectedRoute><MainLayout /></ProtectedRoute>}>
           <Route path="/" element={<ProtectedRoute><Home/></ProtectedRoute>} />
+          <Route path="/listings" element={<ProtectedRoute><Listings/></ProtectedRoute>} />
+          <Route path="/categories" element={<ProtectedRoute><Categories/></ProtectedRoute>} />
+          <Route path="/categories/create" element={<ProtectedRoute><CreateCategory/></ProtectedRoute>} />
         </Route>
 
       </Routes>
