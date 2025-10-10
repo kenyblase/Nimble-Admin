@@ -1,7 +1,7 @@
 import { ArrowLeft, Edit, Plus, Trash2, X } from 'lucide-react';
 import React, { useState } from 'react';
 import toast from 'react-hot-toast';
-import { useGetCategories } from '../../utils/useApis/useCategoryApis/useGetCategories';
+import { useGetAllCategories } from '../../utils/useApis/useCategoryApis/useGetCategories';
 import LoadingSpinner from '../../components/LoadingSpinner';
 import { useCreateCategory } from '../../utils/useApis/useCategoryApis/useCreateCategory';
 import { useNavigate } from 'react-router-dom';
@@ -22,7 +22,7 @@ const CreateCategory = () => {
   const [newValueInput, setNewValueInput] = useState('');
   const [editValueInput, setEditValueInput] = useState('');
 
-  const {data:categories, isLoading, error} = useGetCategories()
+  const {data:categories, isLoading, error} = useGetAllCategories()
   const {createCategory, isCreating} = useCreateCategory()
 
   const navigate = useNavigate()
