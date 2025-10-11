@@ -6,6 +6,7 @@ import { useGetCategoriesWithProductCount } from '../../utils/useApis/useCategor
 import { useState } from 'react'
 import LoadingSpinner from '../../components/LoadingSpinner'
 import { useEffect } from 'react'
+import CommissionCards from '../../components/CommissionCards'
 
 const Categories = () => {
   const [page, setPage] = useState(1)
@@ -21,13 +22,17 @@ const Categories = () => {
   }, [search]);
 
   return (
-    <div className='mt-[29px] flex flex-col gap-7'>
+    <div className='mt-7 mb-5 flex flex-col gap-7'>
       <div className='h-11 flex justify-between items-center'>
         <h1 className='text-3xl font-bold text-[#202224]'>Categories</h1>
         <button onClick={()=>navigate('/categories/create')} className='flex gap-1 items-center cursor-pointer h-full rounded-full bg-[#3652AD] px-5'>
           <Plus size={18} color='#F6F6F6'/>
           <h1 className='text-lg font-semibold text-[#FEFEFF]'>Create category</h1>
         </button>
+      </div>
+
+      <div>
+        <CommissionCards/>
       </div>
 
       <div>

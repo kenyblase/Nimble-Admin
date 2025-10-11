@@ -8,4 +8,10 @@ export const categoryApi = {
   createCategory: async (api, data) => {
     return api.post("/admin/create-category", data);
   },
+  getTotalCommission: async (api, filter) => {
+    return api.get(`/admin/commissions/total?filter=${filter}`);
+  },
+  getCategoryCommission: async (api, categoryId, filter) => {
+    return api.get(`admin/commissions/category?categoryId=${categoryId}&filter=${filter}`);
+  },
 };
