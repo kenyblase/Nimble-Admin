@@ -13,6 +13,17 @@ const getAllCategories = async (api) => {
   }
 };
 
+const getCategory = async (api, id) => {
+  try {
+    const res = await categoryApi.getCategory(api, id);
+    const category = res.data
+    return category;
+  } catch (err) {
+    console.log(err)
+    return null;
+  }
+};
+
 export const useGetAllCategories = () => {
   const api = useApiClient();
 
@@ -20,6 +31,19 @@ export const useGetAllCategories = () => {
     queryKey: ['allCategories'],
     queryFn: async () => {
       return await getAllCategories(api);
+    },
+    retry: false,
+    staleTime: 5 * 60 * 1000,
+  });
+};
+
+export const useGetCategory = (id) => {
+  const api = useApiClient();
+
+  return useQuery({
+    queryKey: ['category', id],
+    queryFn: async () => {
+      return await getCategory(api, id);
     },
     retry: false,
     staleTime: 5 * 60 * 1000,

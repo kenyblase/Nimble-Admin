@@ -29,16 +29,9 @@ const Navbar = () => {
             )}
         </div>
         
-
-        <img src={admin.avatar ? admin.avatar : "/default-avatar.jpeg"} alt="admin profile pic" className='h-14 object-cover rounded-full mr-2'/>
-
         <div className='flex flex-col mr-2'>
           <p className='text-2xl font-semibold text-[#1A1A1A] whitespace-nowrap'>{admin?.firstName} {admin?.lastName}</p>
           <p className='text-base font-semibold text-[#999999] text-right whitespace-nowrap'>{admin?.role}</p>
-        </div>
-
-        <div className='size-4.5 border-[0.2px] border-[#5C5C5C] rounded-full flex items-center justify-center'>
-          <ChevronDown color='#565656'/>
         </div>
       </div>
 

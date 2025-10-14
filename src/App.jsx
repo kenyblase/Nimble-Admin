@@ -8,6 +8,7 @@ import Login from './pages/auth/Login'
 
 import Home from './pages/dashboard/home';
 import Categories from './pages/dashboard/categories';
+import Category from './pages/dashboard/category';
 import CreateCategory from './pages/dashboard/createCategory';
 
 import { useCheckAuth } from './utils/useApis/useAuthApis/useCheckAuth';
@@ -48,6 +49,7 @@ function App() {
           <Route path="/" element={<ProtectedRoute><Home/></ProtectedRoute>} />
           <Route path="/listings" element={<ProtectedRoute><Listings/></ProtectedRoute>} />
           <Route path="/categories" element={<ProtectedRoute><Categories/></ProtectedRoute>} />
+          <Route path="/categories/:id" element={<ProtectedRoute><Category/></ProtectedRoute>} />
           <Route path="/categories/create" element={<ProtectedRoute><CreateCategory/></ProtectedRoute>} />
         </Route>
 

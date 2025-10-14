@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import Input from "../components/Input";
 import { MoreVertical, Search } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const CategoriesTable = ({
   categories = [],
@@ -12,6 +13,7 @@ const CategoriesTable = ({
 }) => {
   const [openMenuId, setOpenMenuId] = useState(null);
   const menuRef = useRef(null);
+  const navigate = useNavigate()
 
   // close menu when clicked outside
   useEffect(() => {
@@ -107,7 +109,7 @@ const CategoriesTable = ({
                           className="absolute right-6 top-[70%] w-36 bg-white shadow-lg rounded-xl border border-gray-100 py-2 z-20 animate-fadeIn"
                         >
                           <button
-                            onClick={() => console.log("View", cat._id)}
+                            onClick={() => navigate(`/categories/${cat._id}`)}
                             className="block w-full text-left px-4 py-2 text-sm text-[#1C357E] hover:bg-gray-50"
                           >
                             View

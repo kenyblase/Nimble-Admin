@@ -25,7 +25,6 @@ export default function CommissionCards() {
 
   const totalCommission = totalData?.totalCommission || 0;
   const categoryCommission = categoryData?.categoryCommission || 0;
-  const categoryName = categoryData?.categoryName || "No Category";
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6 w-full">
@@ -46,7 +45,7 @@ export default function CommissionCards() {
             </button>
 
             {openFilter === "totalFilter" && (
-              <div className="absolute right-0 mt-2 w-32 bg-white border border-gray-200 rounded-md shadow-lg z-10">
+              <div className="absolute right-0 mt-2 w-32 bg-white border border-gray-200 rounded-md shadow-lg z-10 animate-fadeIn">
                 {filters.map((f) => (
                   <div
                     key={f.value}
@@ -86,7 +85,7 @@ export default function CommissionCards() {
             </button>
 
             {openFilter === "categoryFilter" && (
-              <div className="absolute right-0 mt-2 w-32 bg-white border border-gray-200 rounded-md shadow-lg z-10">
+              <div className="absolute right-0 mt-2 w-32 bg-white border border-gray-200 rounded-md shadow-lg z-10 animate-fadeIn">
                 {filters.map((f) => (
                   <div
                     key={f.value}
@@ -122,7 +121,7 @@ export default function CommissionCards() {
           </button>
 
           {openFilter === "categoryDropdown" && (
-            <div className="absolute left-0 mt-2 w-full bg-white border border-gray-200 rounded-md shadow-lg max-h-56 overflow-y-auto z-10">
+            <div className="absolute left-0 mt-2 w-full bg-white border border-gray-200 rounded-md shadow-lg max-h-56 overflow-y-auto z-10 animate-fadeIn">
               {categories?.length ? (
                 categories.map((cat) => (
                   <div

@@ -2,6 +2,12 @@ export const categoryApi = {
   getAllCategories: async (api) => {
     return api.get("/admin/categories");
   },
+  getCategory: async (api, id) => {
+    return api.get(`/admin/categories/${id}`);
+  },
+  toggleCategoryActiveStatus: async (api, id) => {
+    return api.put(`/admin/categories/${id}/toggle`);
+  },
   getCategoriesWithProductCount: async (api, page = 1, limit = 10, search) => {
     return api.get(`/admin/categories-count?page=${page}&limit=${limit}&search=${encodeURIComponent(search)}`);
   },
