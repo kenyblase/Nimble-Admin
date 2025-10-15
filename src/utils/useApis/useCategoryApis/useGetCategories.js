@@ -45,6 +45,7 @@ export const useGetCategory = (id) => {
     queryFn: async () => {
       return await getCategory(api, id);
     },
+    enabled: !!id,
     retry: false,
     staleTime: 5 * 60 * 1000,
   });

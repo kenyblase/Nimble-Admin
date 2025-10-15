@@ -12,7 +12,13 @@ export const categoryApi = {
     return api.get(`/admin/categories-count?page=${page}&limit=${limit}&search=${encodeURIComponent(search)}`);
   },
   createCategory: async (api, data) => {
-    return api.post("/admin/create-category", data);
+    return api.post("/admin/categories/create", data);
+  },
+  updateCategory: async (api, id, data) => {
+    return api.put(`/admin/categories/${id}/update`, data);
+  },
+  deleteCategory: async (api, id) => {
+    return api.delete(`/admin/categories/${id}/delete`);
   },
   getTotalCommission: async (api, filter) => {
     return api.get(`/admin/commissions/total?filter=${filter}`);

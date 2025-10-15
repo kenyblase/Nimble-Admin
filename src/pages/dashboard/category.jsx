@@ -5,13 +5,17 @@ import { ArrowLeft, Edit } from 'lucide-react'
 import LoadingSpinner from '../../components/LoadingSpinner'
 import { useToggleCategoryActiveStatus } from '../../utils/useApis/useCategoryApis/useToggleCategoryActiveStatus'
 import ItemTabs from '../../components/ItemTabs'
+import { useDeleteCategory } from '../../utils/useApis/useCategoryApis/useDeleteCategory'
+import { useQueryClient } from '@tanstack/react-query'
 
 const Category = () => {
     const {id} = useParams()
     const navigate = useNavigate()
+    const queryClient = useQueryClient()
     const [itemsActiveTab, setItemsActiveTab] = useState('Active')
 
     const {data, isLoading} = useGetCategory(id)
+    const {deleteCategory} = useDeleteCategory()
     const {toggleCategoryActiveStatus} = useToggleCategoryActiveStatus()
 
     const itemsTabs = [
@@ -48,10 +52,18 @@ const Category = () => {
                     </div>
                 </div>
                 <div className='flex gap-6'>
-                    <div className='bg-[#D3E4FE4D] size-11 border border-[#3652AD] rounded-full flex items-center justify-center'>
+                    <div  
+                        onClick={() =>{ 
+                              queryClient.setQueryData(["category", id], { data: data.category });
+                              navigate(`/categories/${id}/edit`)
+                        }}
+                        className='bg-[#D3E4FE4D] size-11 border border-[#3652AD] rounded-full flex items-center justify-center cursor-pointer'>
                         <Edit color='#3652AD' size={20}/>
                     </div>
-                    <div className='h-11 border border-[#B91C1C] px-5 flex items-center justify-center rounded-full'>
+                    <div onClick={async()=>{
+                        await deleteCategory(id)
+                        navigate('/categories')
+                        }} className='h-11 border border-[#B91C1C] px-5 flex items-center justify-center rounded-full cursor-pointer'>
                         <p className='text-[#B91C1C] font-semibold text-base'>Delete</p>
                     </div>
                 </div>

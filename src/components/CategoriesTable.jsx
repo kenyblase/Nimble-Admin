@@ -2,6 +2,8 @@ import React, { useState, useRef, useEffect } from "react";
 import Input from "../components/Input";
 import { MoreVertical, Search } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useQueryClient } from "@tanstack/react-query";
+import { useDeleteCategory } from '../utils/useApis/useCategoryApis/useDeleteCategory'
 
 const CategoriesTable = ({
   categories = [],
@@ -14,6 +16,8 @@ const CategoriesTable = ({
   const [openMenuId, setOpenMenuId] = useState(null);
   const menuRef = useRef(null);
   const navigate = useNavigate()
+  const queryClient = useQueryClient()
+  const { deleteCategory } = useDeleteCategory()
 
   // close menu when clicked outside
   useEffect(() => {
@@ -115,14 +119,19 @@ const CategoriesTable = ({
                             View
                           </button>
                           <button
-                            onClick={() => console.log("Edit", cat._id)}
+                            onClick={() =>{ 
+                              queryClient.setQueryData(["category", cat._id], { data: cat });
+                              navigate(`/categories/${cat._id}/edit`)
+                            }}
                             className="block w-full text-left px-4 py-2 text-sm text-[#1C357E] hover:bg-gray-50"
                           >
                             Edit
                           </button>
                           <hr className="my-1 border-gray-200" />
                           <button
-                            onClick={() => console.log("Remove", cat._id)}
+                            onClick={async() =>{ 
+                              await deleteCategory(cat._id)
+                            }}
                             className="block w-full text-left px-4 py-2 text-sm text-red-500 hover:bg-gray-50"
                           >
                             Remove
