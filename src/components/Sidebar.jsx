@@ -28,15 +28,15 @@ const Sidebar = () => {
     const topNavItems = [
     { to: "/", label: "Dashboard", icon: LayoutGrid },
     { to: "/listings", label: "Listings & ads", icon: List },
-    { to: "/documents", label: "Order", icon: FileText },
+    { to: "/orders", label: "Order", icon: FileText },
     { to: "/users", label: "Users", icon: Users },
-    { to: "/tasks", label: "Transactions", icon: ListOrdered },
-    { to: "/calendar", label: "Payout", icon: ArrowRightSquare },
+    { to: "/transactions", label: "Transactions", icon: ListOrdered },
+    { to: "/payouts", label: "Payout", icon: ArrowRightSquare },
     { to: "/categories", label: "Categories", icon: LayoutDashboard },
-    { to: "/messages", label: "Supports & Appeals", icon: Headset },
+    { to: "/appeals", label: "Supports & Appeals", icon: Headset },
     { to: "/analytics", label: "Analytics", icon: BarChart3 },
-    { to: "/info", label: "Report and security", icon: AlertOctagon },
-    { to: "/profile", label: "Admins management", icon: UserCog2 },
+    { to: "/reports", label: "Report and security", icon: AlertOctagon },
+    { to: "/admins", label: "Admins management", icon: UserCog2 },
     { to: "/notifications", label: "Notifications", icon: Bell },
   ];
 
