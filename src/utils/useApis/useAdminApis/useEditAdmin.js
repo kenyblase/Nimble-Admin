@@ -3,17 +3,17 @@ import { useApiClient } from "../../api/apiClient";
 import toast from "react-hot-toast";
 import { adminApi } from "../../api/adminApi";
 
-export const useEditAdminPermissions = () => {
+export const useEditAdmin = () => {
   const api = useApiClient();
   const queryClient = useQueryClient();
 
   const mutation = useMutation({
     mutationFn: async (data) => {
-      const response = await adminApi.editAdminPermissions(api, data._id, {permissions: data.permissions, password: data.password});
+      const response = await adminApi.editAdmin(api, data._id, data);
       return response.data;
     },
     onSuccess: () => {
-      toast.success("Permissions Updated successfully!");
+      toast.success("Admin Info Updated successfully!");
       queryClient.invalidateQueries({ queryKey: ['adminList'] });
     },
     onError: (error) => {
@@ -21,7 +21,7 @@ export const useEditAdminPermissions = () => {
     },
   });
 
-  const editAdminPermissions = async(data) => {
+  const editAdmin = async(data) => {
 
     const response = await mutation.mutateAsync(data);  
     
@@ -29,7 +29,7 @@ export const useEditAdminPermissions = () => {
   };
 
   return {
-    editAdminPermissions,
-    isUpdatingPermissions: mutation.isPending,
+    editAdmin,
+    isEditing: mutation.isPending,
   };
 };
