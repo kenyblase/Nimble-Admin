@@ -3,37 +3,33 @@ import { useApiClient } from "../../api/apiClient";
 import toast from "react-hot-toast";
 import { adminApi } from "../../api/adminApi";
 
-export const useDeleteAdmin = () => {
+export const useAddAdmin = () => {
   const api = useApiClient();
   const queryClient = useQueryClient();
 
   const mutation = useMutation({
-    mutationFn: async (id) => {
-      const response = await adminApi.deleteAdmin(api, id);
+    mutationFn: async (data) => {
+      const response = await adminApi.addAdmin(api, data);
       return response.data;
     },
     onSuccess: () => {
-      toast.success("Admin Deleted successfully!");
+      toast.success("Admin Created successfully!");
       queryClient.invalidateQueries({ queryKey: ['adminList'] });
     },
     onError: (error) => {
-      toast.error( error.response?.data?.message || "Failed to delete admin.");
+      toast.error( error.response?.data?.message || "Admin Signup failed.");
     },
   });
 
-  const deleteAdmin = async(id) => {
+  const addAdmin = async(data) => {
 
-    const confirmed = window.confirm('Are you sure you want to delete this admin?');
-
-    if (!confirmed) return;
-
-    const response = await mutation.mutateAsync(id);  
+    const response = await mutation.mutateAsync(data);  
     
     return response.data
   };
 
   return {
-    deleteAdmin,
-    isDeleting: mutation.isPending,
+    addAdmin,
+    isCreating: mutation.isPending,
   };
 };

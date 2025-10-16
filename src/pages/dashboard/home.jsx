@@ -8,16 +8,10 @@ import { useState } from 'react'
 
 const Home = () => {
     const [page, setPage] = useState(1);
-    const { data:transactions, isLoading:isFetching, error: err } = useGetLatestTransactions(page, 10);
-    const { data, isLoading, error} = useGetDashboardAnalytics()
-
-    useEffect(()=>{
-        console.log(transactions)
-    },[data])
+    const { data:transactions, isLoading:isFetching} = useGetLatestTransactions(page, 10);
+    const { data, isLoading} = useGetDashboardAnalytics()
 
     if(isLoading || isFetching) return <LoadingSpinner/>
-
-    if(error || err) return <p>{error || err}</p>
 
     const analytics = [
     {

@@ -28,9 +28,9 @@ function EditAdminModal({ isOpen, onClose, adminData, setAdminData }) {
         onClick={onClose}
       />
 
-      <div className="relative flex flex-col py-8 px-12 gap-10 bg-[#FBFCFF] w-[800px] max-w-full rounded-lg shadow-lg p-10 z-10">
+      <div className="relative flex flex-col py-8 px-12 gap-10 bg-[#FBFCFF] w-[800px] max-w-full max-h-screen rounded-lg shadow-lg p-10 z-10 overflow-y-scroll">
             <div className=" flex justify-between items-center">
-                <h1 className="font-bold text-3xl text-[#2E2E2E]">Add new Admin</h1>
+                <h1 className="font-bold text-3xl text-[#2E2E2E]">Edit Admin Details</h1>
                 <div className="">
                     <XCircle onClick={()=>{
                         onClose()

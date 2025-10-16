@@ -2,6 +2,7 @@ import { useState } from "react";
 import Input from "../components/Input";
 import { Edit2, Trash2, Search } from "lucide-react";
 import EditAdminModal from "../components/EditAdminModal";
+import { useDeleteAdmin } from "../utils/useApis/useAdminApis/useDeleteAdmin";
 
 const CategoriesTable = ({
   admins = [],
@@ -13,6 +14,7 @@ const CategoriesTable = ({
 }) => {
   const [selectedAdminToEdit, setSelectedAdminToEdit] = useState(null);
   const [openEditModal, setOpenEditModal] = useState(null);
+  const {deleteAdmin} = useDeleteAdmin()
 
   const getPaginationRange = () => {
     const range = [];
@@ -87,7 +89,7 @@ const CategoriesTable = ({
                           setSelectedAdminToEdit(admin)
                           setOpenEditModal(true)
                         }} size={20} color="#3652AD" className="cursor-pointer"/>
-                        <Trash2 size={20} color="#B72240" className="cursor-pointer"/>
+                        <Trash2 onClick={()=>{deleteAdmin(admin._id)}} size={20} color="#B72240" className="cursor-pointer"/>
                       </div>
                     </td>
                   </tr>
