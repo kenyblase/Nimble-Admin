@@ -7,17 +7,20 @@ import MainLayout from './layouts/mainLayout'
 import Login from './pages/auth/Login'
 
 import Home from './pages/dashboard/home';
+import Listings from './pages/dashboard/listings';
+import Users from './pages/dashboard/users';
+import Transactions from './pages/dashboard/transactions';
+import Payouts from './pages/dashboard/payouts';
 import Categories from './pages/dashboard/categories';
 import Category from './pages/dashboard/category';
 import CreateCategory from './pages/dashboard/createCategory';
+import EditCategory from './pages/dashboard/editCategory';
+import Admin from './pages/dashboard/admin';
 
 import { useCheckAuth } from './utils/useApis/useAuthApis/useCheckAuth';
 import { useAuthStore } from './utils/api/store/useAuthStore';
 
 import LoadingSpinner from './components/LoadingSpinner'
-import Listings from './pages/dashboard/listings';
-import EditCategory from './pages/dashboard/editCategory';
-import Admin from './pages/dashboard/admin';
 
 const ProtectedRoute = ({ children }) => {
   const admin = useAuthStore((state) => state.admin);
@@ -50,6 +53,9 @@ function App() {
         <Route element={<ProtectedRoute><MainLayout /></ProtectedRoute>}>
           <Route path="/" element={<ProtectedRoute><Home/></ProtectedRoute>} />
           <Route path="/listings" element={<ProtectedRoute><Listings/></ProtectedRoute>} />
+          <Route path="/users" element={<ProtectedRoute><Users/></ProtectedRoute>} />
+          <Route path="/transactions" element={<ProtectedRoute><Transactions/></ProtectedRoute>} />
+          <Route path="/payouts" element={<ProtectedRoute><Payouts/></ProtectedRoute>} />
           <Route path="/categories" element={<ProtectedRoute><Categories/></ProtectedRoute>} />
           <Route path="/categories/:id" element={<ProtectedRoute><Category/></ProtectedRoute>} />
           <Route path="/categories/create" element={<ProtectedRoute><CreateCategory/></ProtectedRoute>} />
