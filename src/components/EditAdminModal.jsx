@@ -105,36 +105,6 @@ function EditAdminModal({ isOpen, onClose, adminData, setAdminData }) {
                 </select>
               </div>
           </div>
-          
-          <div className="flex flex-col gap-2">
-            <div className="flex justify-between items-center">
-            <h3 className="text-xl font-semibold text-[#666666]">Permissions</h3>
-            </div>
-            <div className="flex flex-col gap-4">
-              {permissions.map((permission) => (
-                <label
-                  key={permission.id}
-                  className={`flex items-center gap-4 px-3 rounded-lg transition`}
-                >
-                  <input
-                    type="checkbox"
-                    name="permissions"
-                    checked={adminData.permissions.includes(permission.id)}
-                    onChange={() => {
-                      setAdminData(prev => {
-                        const updated = prev.permissions.includes(permission.id)
-                          ? prev.permissions.filter(id => id !== permission.id)
-                          : [...prev.permissions, permission.id];
-                        return { ...prev, permissions: updated };
-                      });
-                    }}
-                    className=" accent-[#0057FF] h-4 w-4"
-                  />
-                  <span className={`font-semibold text-base text-[#000000CC] `}>{permission.label}</span>
-                </label>
-              ))}
-            </div>
-          </div>
         <div className="flex gap-4 w-full h-14">
           <button onClick={onClose} className={`w-full py-4 px-10 rounded-lg cursor-pointer font-semibold text-[#3652AD]`}>Cancel</button>
           <button onClick={handleClick} disabled={isEditing} className="bg-[#3652AD] px-10 rounded-full w-full cursor-pointer flex items-center justify-center ">{isEditing ? <LoadingSpinner size='size-5'/> : <p className="text-[#FEFEFF]">Save</p>}</button>
@@ -145,30 +115,3 @@ function EditAdminModal({ isOpen, onClose, adminData, setAdminData }) {
 }
 
 export default EditAdminModal;
-
-  const permissions = [
-     {
-      id: "mediate",
-      label: "Mediate in dispute",
-    },
-    {
-      id: "messages",
-      label: "Read and respond to messages",
-    },
-    {
-      id: "listing-view",
-      label: "View listing",
-    },
-    {
-      id: "listing-approval",
-      label: "Reject or approve listing",
-    },
-    {
-      id: "transactions",
-      label: "See transactions",
-    },
-    {
-      id: "payout",
-      label: "Approve payout requests",
-    }
-  ]

@@ -16,7 +16,6 @@ function AddAdminModal({ isOpen, onClose }) {
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const [role, setRole] = useState('')
-  const [permissions, setPermissions] = useState([])
 
   const handleClick = async()=>{
     if(!email || !firstName || !lastName || !phone) return toast.error('Fill in all fields')
@@ -25,7 +24,7 @@ function AddAdminModal({ isOpen, onClose }) {
     
     if(!role) return toast.error('Select a role for this admin')
 
-    await addAdmin({email, firstName, lastName, password, phone, role, permissions})
+    await addAdmin({email, firstName, lastName, password, phone, role})
     onClose()
   }
 
@@ -113,35 +112,6 @@ function AddAdminModal({ isOpen, onClose }) {
                 </select>
               </div>
           </div>
-          
-          <div className="flex flex-col gap-2">
-            <div className="flex justify-between items-center">
-            <h3 className="text-xl font-semibold text-[#666666]">Permissions</h3>
-            </div>
-            <div className="flex flex-col gap-4">
-              {adminPermissions.map((permission) => (
-                <label
-                  key={permission.id}
-                  className={`flex items-center gap-4 px-3 rounded-lg transition`}
-                >
-                  <input
-                    type="checkbox"
-                    name="permissions"
-                    checked={permissions.includes(permission.id)}
-                    onChange={() => {
-                      setPermissions(prev => 
-                        prev.includes(permission.id)
-                          ? prev.filter(id => id !== permission.id) // remove
-                          : [...prev, permission.id] // add
-                      );
-                    }}
-                    className=" accent-[#0057FF] h-4 w-4"
-                  />
-                  <span className={`font-semibold text-base text-[#000000CC] `}>{permission.label}</span>
-                </label>
-              ))}
-            </div>
-          </div>
         <div className="flex gap-4 w-full h-14">
           <button onClick={onClose} className={`w-full py-4 px-10 rounded-lg cursor-pointer font-semibold text-[#3652AD]`}>Cancel</button>
           <button onClick={handleClick} disabled={isCreating} className="bg-[#3652AD] px-10 rounded-full w-full cursor-pointer flex items-center justify-center ">{isCreating ? <LoadingSpinner size='size-5'/> : <p className="text-[#FEFEFF]">Add Admin</p>}</button>
@@ -152,30 +122,3 @@ function AddAdminModal({ isOpen, onClose }) {
 }
 
 export default AddAdminModal;
-
-  const adminPermissions = [
-     {
-      id: "mediate",
-      label: "Mediate in dispute",
-    },
-    {
-      id: "messages",
-      label: "Read and respond to messages",
-    },
-    {
-      id: "listing-view",
-      label: "View listing",
-    },
-    {
-      id: "listing-approval",
-      label: "Reject or approve listing",
-    },
-    {
-      id: "transactions",
-      label: "See transactions",
-    },
-    {
-      id: "payout",
-      label: "Approve payout requests",
-    }
-  ]

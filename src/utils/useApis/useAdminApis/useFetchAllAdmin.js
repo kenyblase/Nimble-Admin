@@ -19,6 +19,7 @@ export const useFetchAllAdmins = (page=1, limit=10, search='') => {
     queryKey: ['adminList', page, search],
     queryFn: async () => {
       return await fetchAllAdmin(api, page, limit, search);
-    }
+    },
+    placeholderData: (prev) => prev,
   });
 };
