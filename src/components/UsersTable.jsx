@@ -129,7 +129,7 @@ const UsersTable = ({
                           className="absolute right-6 top-[70%] w-36 bg-white shadow-lg rounded-xl border border-gray-100 py-2 z-20 animate-fadeIn"
                         >
                           <button
-                            onClick={() => {}}
+                            onClick={() => {navigate(`/users/${user._id}`)}}
                             className="block w-full text-left px-4 py-2 text-sm text-[#1C357E] hover:bg-gray-50"
                           >
                             View

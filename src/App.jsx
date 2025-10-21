@@ -23,6 +23,7 @@ import { useCheckAuth } from './utils/useApis/useAuthApis/useCheckAuth';
 import { useAuthStore } from './utils/api/store/useAuthStore';
 
 import LoadingSpinner from './components/LoadingSpinner'
+import EditUser from './pages/dashboard/editUser';
 
 const ProtectedRoute = ({ children }) => {
   const admin = useAuthStore((state) => state.admin);
@@ -57,6 +58,7 @@ function App() {
           <Route path="/listings" element={<ProtectedRoute><Listings/></ProtectedRoute>} />
           <Route path="/users" element={<ProtectedRoute><Users/></ProtectedRoute>} />
           <Route path="/users/:id" element={<ProtectedRoute><User/></ProtectedRoute>} />
+          <Route path="/users/:id/edit" element={<ProtectedRoute><EditUser/></ProtectedRoute>} />
           <Route path="/transactions" element={<ProtectedRoute><Transactions/></ProtectedRoute>} />
           <Route path="/transactions/:id" element={<ProtectedRoute><Transaction/></ProtectedRoute>} />
           <Route path="/payouts" element={<ProtectedRoute><Payouts/></ProtectedRoute>} />

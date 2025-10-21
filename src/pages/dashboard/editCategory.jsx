@@ -38,8 +38,8 @@ const EditCategory = () => {
 
   // Populate fields when category data is fetched
   useEffect(() => {
-    if (categoryData?.data) {
-      const category = categoryData.data;
+    if (categoryData?.category) {
+      const category = categoryData.category;
       setName(category.name || '');
       setCommissionPercentage(category.commissionPercentage ?? 0);
       setSelectedParentCategory(category.parentCategory?._id || '');

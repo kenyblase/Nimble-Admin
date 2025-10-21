@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useGetCategory } from '../../utils/useApis/useCategoryApis/useGetCategories'
 import { ArrowLeft, Edit } from 'lucide-react'
@@ -54,7 +54,7 @@ const Category = () => {
                 <div className='flex gap-6'>
                     <div  
                         onClick={() =>{ 
-                              queryClient.setQueryData(["category", id], { data: data.category });
+                              queryClient.setQueryData(["category", id], data);
                               navigate(`/categories/${id}/edit`)
                         }}
                         className='bg-[#D3E4FE4D] size-11 border border-[#3652AD] rounded-full flex items-center justify-center cursor-pointer'>

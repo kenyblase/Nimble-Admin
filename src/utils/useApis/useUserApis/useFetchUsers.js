@@ -12,6 +12,17 @@ const fetchUsers = async (api, page, limit, search, filter) => {
   }
 };
 
+const fetchUser = async (api, id) => {
+  try {
+    const res = await userApi.fetchUser(api, id);
+    const category = res.data
+    return category;
+  } catch (err) {
+    console.log(err)
+    return null;
+  }
+};
+
 export const useFetchUsers = (page=1, limit=10, search='', filter = '') => {
   const api = useApiClient();
 
@@ -21,5 +32,19 @@ export const useFetchUsers = (page=1, limit=10, search='', filter = '') => {
       return await fetchUsers(api, page, limit, search, filter);
     },
     placeholderData: (prev) => prev,
+  });
+};
+
+export const useFetchUser = (id) => {
+  const api = useApiClient();
+
+  return useQuery({
+    queryKey: ['user', id],
+    queryFn: async () => {
+      return await fetchUser(api, id);
+    },
+    enabled: !!id,
+    retry: false,
+    staleTime: 5 * 60 * 1000,
   });
 };
