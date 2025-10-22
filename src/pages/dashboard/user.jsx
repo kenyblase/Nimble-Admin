@@ -6,6 +6,7 @@ import ItemTabs from '../../components/ItemTabs'
 import { useQueryClient } from '@tanstack/react-query'
 import { useFetchUser } from '../../utils/useApis/useUserApis/useFetchUsers'
 import StarRating from '../../components/StarRating'
+import { useToggleUserStatus } from '../../utils/useApis/useUserApis/useToggleUserStatus'
 
 const User = () => {
     const {id} = useParams()
@@ -14,6 +15,8 @@ const User = () => {
     const [itemsActiveTab, setItemsActiveTab] = useState('Active')
 
     const {data, isLoading} = useFetchUser(id)
+
+    const {toggleUserStatus, isToggling} = useToggleUserStatus()
 
     const itemsTabs = [
     {label: 'Active', count: 12, bgColor: 'bg-[#DEF9D4]', countColor: 'text-[#348352]'}, 
@@ -36,13 +39,13 @@ const User = () => {
                 </div>
                 <div className='flex gap-6'>
                     <div onClick={async()=>{
-                        
+                          await toggleUserStatus(id, 'suspended')
                         }} 
                         className='h-11 border border-[#3652AD] px-5 flex items-center justify-center rounded-full cursor-pointer'>
                         <p className='text-[#3652AD] font-semibold text-base'>{data?.user?.status !== 'suspended' ? 'Suspend User' : 'Lift Suspension'}</p>
                     </div>
                     <div onClick={async()=>{
-                        
+                          await toggleUserStatus(id, 'banned')
                         }} 
                         className='h-11 border border-[#3652AD] px-5 flex items-center justify-center rounded-full cursor-pointer'>
                         <p className='text-[#3652AD] font-semibold text-base'>{data?.user?.status !== 'banned' ? 'Ban User' : 'Remove Ban'}</p>
@@ -94,9 +97,7 @@ const User = () => {
             </div>
             <div className='flex flex-col gap-3 pr-8'>
               <p className='font-medium text-base text-[#202224]'>Verification</p>
-              <div className='bg-[#DEF9D4] text-center rounded-sm py-1 px-3'>
-                <p className='font-medium text-base text-[#348352]'>{data?.user?.isVerified ? 'Verified' : 'Unverified'}</p>
-              </div>
+              {handleVerification(data?.user?.isVerified)}
             </div>
             <div className='flex flex-col gap-3 pr-8'>
               <p className='font-medium text-base text-[#202224]'>Status</p>
@@ -134,6 +135,18 @@ const handleStatus = (status)=>{
   else  return (
     <span className={`w-fit text-sm font-medium flex items-center gap-1 py-1 px-3 rounded-lg bg-[#F9EDD4] text-[#FF8911]`}>
       {status}
+    </span>
+  )
+}
+const handleVerification = (isVerified)=>{
+  if(isVerified) return (
+    <span className={`w-fit text-sm font-medium flex items-center gap-1 py-1 px-3 rounded-lg bg-[#DEF9D4] text-[#348352]`}>
+      Verified ID
+    </span>
+  )
+  else return (
+    <span className={`w-fit text-sm font-medium flex items-center gap-1 py-1 px-3 rounded-lg bg-[#F9D8D4] text-[#FF640F]`}>
+      Unverified ID
     </span>
   )
 }

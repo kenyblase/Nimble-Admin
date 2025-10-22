@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import Input from "../components/Input";
 import { MoreVertical, Search } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { useQueryClient } from "@tanstack/react-query";
+import { useToggleUserStatus } from "../utils/useApis/useUserApis/useToggleUserStatus";
 
 const UsersTable = ({
   users = [],
@@ -15,7 +15,8 @@ const UsersTable = ({
   const [openMenuId, setOpenMenuId] = useState(null);
   const menuRef = useRef(null);
   const navigate = useNavigate()
-  const queryClient = useQueryClient()
+
+  const {toggleUserStatus} = useToggleUserStatus()
 
   // close menu when clicked outside
   useEffect(() => {
@@ -129,23 +130,38 @@ const UsersTable = ({
                           className="absolute right-6 top-[70%] w-36 bg-white shadow-lg rounded-xl border border-gray-100 py-2 z-20 animate-fadeIn"
                         >
                           <button
-                            onClick={() => {navigate(`/users/${user._id}`)}}
+                            onClick={() => {
+                              navigate(`/users/${user._id}`)
+                            }}
                             className="block w-full text-left px-4 py-2 text-sm text-[#1C357E] hover:bg-gray-50"
                           >
                             View
                           </button>
                           <button
-                            onClick={() =>{}}
+                            onClick={async()=>{
+                              await toggleUserStatus(user._id, 'suspended')
+                              setOpenMenuId(null)
+                            }} 
+                            className="block w-full text-left px-4 py-2 text-sm text-[#1C357E] hover:bg-gray-50"
+                          >
+                            {user?.status === 'suspended' ? 'Lift Suspension' : 'Suspend'}
+                          </button>
+                          <button
+                            onClick={async()=>{
+                              await toggleUserStatus(user._id, 'banned')
+                              setOpenMenuId(null)
+                            }} 
+                            className="block w-full text-left px-4 py-2 text-sm text-[#1C357E] hover:bg-gray-50"
+                          >
+                            {user?.status === 'banned' ? 'Remove Ban' : 'Ban'}
+                          </button>
+                          <button
+                            onClick={() =>{
+                              navigate(`/users/${id}/edit`)
+                            }}
                             className="block w-full text-left px-4 py-2 text-sm text-[#1C357E] hover:bg-gray-50"
                           >
                             Edit
-                          </button>
-                          <hr className="my-1 border-gray-200" />
-                          <button
-                            onClick={() =>{ }}
-                            className="block w-full text-left px-4 py-2 text-sm text-red-500 hover:bg-gray-50"
-                          >
-                            Remove
                           </button>
                         </div>
                       )}

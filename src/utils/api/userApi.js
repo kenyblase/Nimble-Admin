@@ -11,7 +11,7 @@ export const userApi = {
   editUser: async (api, userId, data) => {
     return api.put(`/admin/users/${userId}/edit`, data);
   },
-//   deleteAdmin: async (api, adminId) => {
-//     return api.delete(`/admin/${adminId}/delete`);
-//   },
+  toggleUserStatus: async (api, id, status) =>{
+    return api.put(`admin/users/${id}/status`, { status })
+  }
 };
