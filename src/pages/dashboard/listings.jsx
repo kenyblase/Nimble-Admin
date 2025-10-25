@@ -2,12 +2,21 @@ import React, { useState } from 'react'
 import Tabs from '../../components/Tabs'
 import AnalyticsCard from '../../components/AnalyticsCard'
 import ItemTabs from '../../components/ItemTabs'
+import ProductCard from '../../components/ProductCard'
+import LoadingSpinner from '../../components/LoadingSpinner'
+import Paginator from '../../components/Paginator'
+import { useFetchListings } from '../../utils/useApis/useListingAPis/useFetchListings'
+import { useFetchListingAnalytics } from '../../utils/useApis/useListingAPis/useFetchListingAnalytics'
 
 const Listings = () => {
   const [activeTab, setActiveTab] = useState('Listings')
   const [itemsActiveTab, setItemsActiveTab] = useState('Active')
+  const [page, setPage] = useState(1)
 
-  const tabs = ['Listings', 'Ads', 'Request']
+  const {data:productData, isLoading:isfetchingProducts} = useFetchListings(page, 12, formatStatus(itemsActiveTab))
+  const {data:analytics, isLoading:loading} = useFetchListingAnalytics()
+
+  const tabs = ['Listings', 'Requests']
   const itemsTabs = [
     {label: 'Active', count: 12, bgColor: 'bg-[#DEF9D4]', countColor: 'text-[#348352]'}, 
     {label: 'Review', count: 12, bgColor: 'bg-[#C6C7F880]', countColor: 'text-[#3652AD]'}, 
@@ -16,47 +25,116 @@ const Listings = () => {
     {label: 'Expired', count: 12, bgColor: 'bg-[#F9D8D4]', countColor: 'text-[#E81008]'},
   ]
 
-  const analytics = [
+  const productAnalytics = [
     {
       title: "Active Listing",
-      value: 689,
-      trendPercent: 8.5,
-      trendDirection: 'up',
-      trendLabel: 'from yesterday',
+      value: analytics?.activeListings?.value,
+      trendPercent: analytics?.activeListings?.change,
+      trendDirection: analytics?.activeListings?.trend,
+      trendLabel: analytics?.activeListings?.duration,
     },
     {
       title: "Closed Listing",
-      value: 10289,
-      trendPercent: 1.3,
-      trendDirection: 'up',
-      trendLabel: 'from yesterday',
+      value: analytics?.closedListings?.value,
+      trendPercent: analytics?.closedListings?.change,
+      trendDirection: analytics?.closedListings?.trend,
+      trendLabel: analytics?.closedListings?.duration,
     },
     {
       title: "Expired Listing",
-      value: 689,
-      trendPercent: -4.3,
-      trendDirection: 'down',
-      trendLabel: 'from yesterday',
+      value: analytics?.expiredListings?.value,
+      trendPercent: analytics?.expiredListings?.change,
+      trendDirection: analytics?.expiredListings?.trend,
+      trendLabel: analytics?.expiredListings?.duration,
     },
   ]
+
+    const actions = [
+    { label: "View", onClick: (p) => console.log("View", p) },
+    // { label: "Remove", onClick: (p) => console.log("Remove", p), variant: "danger" },
+  ];
 
   return (
     <div className='mt-7 flex flex-col gap-7'>
       <Tabs tabs={tabs} activeTab={activeTab} setActiveTab={setActiveTab}/>
 
       {activeTab === 'Listings' &&
+      <>
         <div className='flex gap-8'>
-          {
-              analytics.map((card, index)=>(
+            {loading? <div className='w-full flex justify-center items-center'>
+                        <LoadingSpinner size='size-20'/> 
+                      </div>
+              :
+              productAnalytics.map((card, index)=>(
                     <AnalyticsCard key={index} {...card} />
               ))
-          }
+            }
         </div>
+        <ItemTabs ItemsTabs={itemsTabs} itemsActiveTab={itemsActiveTab} setItemsActiveTab={setItemsActiveTab}/>
+
+        {isfetchingProducts ? 
+          <div className='w-full h-80 flex items-center justify-center'>
+            <div className='w-20 h-20'>
+              <LoadingSpinner size={'size-full'}/>
+            </div>
+          </div> : 
+          <>
+            <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+              {productData?.products?.map((p) => (
+                <ProductCard key={p._id} product={p} actions={actions} />
+              ))}
+            </div>
+
+            <Paginator page={page} setPage={setPage} totalPages={productData?.pagination?.totalPages || 1}/>
+          </>
+        }
+      </>
+      }
+      {activeTab === 'Requests' &&
+      <>
+        <div className='flex gap-8'>
+            {loading? <div className='w-full flex justify-center items-center'>
+                        <LoadingSpinner size='size-20'/> 
+                      </div>
+              :
+              productAnalytics.map((card, index)=>(
+                    <AnalyticsCard key={index} {...card} />
+              ))
+            }
+        </div>
+        <ItemTabs ItemsTabs={itemsTabs} itemsActiveTab={itemsActiveTab} setItemsActiveTab={setItemsActiveTab}/>
+
+        {isfetchingProducts ? 
+          <div className='w-full h-80 flex items-center justify-center'>
+            <div className='w-20 h-20'>
+              <LoadingSpinner size={'size-full'}/>
+            </div>
+          </div> : 
+          <>
+            <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+              {productData?.products?.map((p) => (
+                <ProductCard key={p._id} product={p} actions={actions} />
+              ))}
+            </div>
+
+            <Paginator page={page} setPage={setPage} totalPages={productData?.pagination?.totalPages || 1}/>
+          </>
+        }
+      </>
       }
 
-      <ItemTabs ItemsTabs={itemsTabs} itemsActiveTab={itemsActiveTab} setItemsActiveTab={setItemsActiveTab}/>
     </div>
   )
 }
 
 export default Listings
+
+ const formatStatus = (status) => {
+  if (!status) return "active";
+
+  const normalized = status.trim().toLowerCase();
+
+  if (normalized === "review") return "pending";
+
+  return normalized;
+};

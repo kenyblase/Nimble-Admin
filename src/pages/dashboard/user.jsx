@@ -16,7 +16,7 @@ const User = () => {
 
     const {data, isLoading} = useFetchUser(id)
 
-    const {toggleUserStatus, isToggling} = useToggleUserStatus()
+    const {toggleUserStatus} = useToggleUserStatus()
 
     const itemsTabs = [
     {label: 'Active', count: 12, bgColor: 'bg-[#DEF9D4]', countColor: 'text-[#348352]'}, 
