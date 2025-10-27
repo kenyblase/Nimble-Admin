@@ -1,4 +1,5 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import Tabs from '../../components/Tabs'
 import AnalyticsCard from '../../components/AnalyticsCard'
 import ItemTabs from '../../components/ItemTabs'
@@ -7,14 +8,18 @@ import LoadingSpinner from '../../components/LoadingSpinner'
 import Paginator from '../../components/Paginator'
 import { useFetchListings } from '../../utils/useApis/useListingAPis/useFetchListings'
 import { useFetchListingAnalytics } from '../../utils/useApis/useListingAPis/useFetchListingAnalytics'
+import { useQueryClient } from '@tanstack/react-query'
 
 const Listings = () => {
+  const navigate = useNavigate()
+  const queryClient = useQueryClient()
+
   const [activeTab, setActiveTab] = useState('Listings')
   const [itemsActiveTab, setItemsActiveTab] = useState('Active')
   const [page, setPage] = useState(1)
 
-  const {data:productData, isLoading:isfetchingProducts} = useFetchListings(page, 12, formatStatus(itemsActiveTab))
-  const {data:analytics, isLoading:loading} = useFetchListingAnalytics()
+  const {data:productData, isLoading:isfetchingProducts} = useFetchListings(page, 12, formatActiveTab(activeTab), formatStatus(itemsActiveTab))
+  const {data:analytics, isLoading:loading} = useFetchListingAnalytics(formatActiveTab(activeTab))
 
   const tabs = ['Listings', 'Requests']
   const itemsTabs = [
@@ -27,21 +32,21 @@ const Listings = () => {
 
   const productAnalytics = [
     {
-      title: "Active Listing",
+      title: `Active ${activeTab}`,
       value: analytics?.activeListings?.value,
       trendPercent: analytics?.activeListings?.change,
       trendDirection: analytics?.activeListings?.trend,
       trendLabel: analytics?.activeListings?.duration,
     },
     {
-      title: "Closed Listing",
+      title: `Closed ${activeTab}`,
       value: analytics?.closedListings?.value,
       trendPercent: analytics?.closedListings?.change,
       trendDirection: analytics?.closedListings?.trend,
       trendLabel: analytics?.closedListings?.duration,
     },
     {
-      title: "Expired Listing",
+      title: `Expired ${activeTab}`,
       value: analytics?.expiredListings?.value,
       trendPercent: analytics?.expiredListings?.change,
       trendDirection: analytics?.expiredListings?.trend,
@@ -50,8 +55,11 @@ const Listings = () => {
   ]
 
     const actions = [
-    { label: "View", onClick: (p) => console.log("View", p) },
-    // { label: "Remove", onClick: (p) => console.log("Remove", p), variant: "danger" },
+    { label: "View", onClick: (p) => {
+      queryClient.setQueryData(["listing", p._id], p);
+      navigate(`/listings/${p._id}`)} 
+    },
+    { label: "Remove", onClick: (p) => console.log("Remove", p), variant: "danger" },
   ];
 
   return (
@@ -135,6 +143,17 @@ export default Listings
   const normalized = status.trim().toLowerCase();
 
   if (normalized === "review") return "pending";
+
+  return normalized;
+};
+
+ const formatActiveTab = (tab) => {
+  if (!tab) return "listing";
+
+  const normalized = tab.trim().toLowerCase();
+
+  if (normalized === "listings") return "listing";
+  if (normalized === "requests") return "request";
 
   return normalized;
 };

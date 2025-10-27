@@ -8,6 +8,7 @@ import Login from './pages/auth/Login'
 
 import Home from './pages/dashboard/home';
 import Listings from './pages/dashboard/listings';
+import Listing from './pages/dashboard/listing';
 import Users from './pages/dashboard/users';
 import User from './pages/dashboard/user';
 import Transactions from './pages/dashboard/transactions';
@@ -56,6 +57,7 @@ function App() {
         <Route element={<ProtectedRoute><MainLayout /></ProtectedRoute>}>
           <Route path="/" element={<ProtectedRoute><Home/></ProtectedRoute>} />
           <Route path="/listings" element={<ProtectedRoute><Listings/></ProtectedRoute>} />
+          <Route path="/listings/:id" element={<ProtectedRoute><Listing/></ProtectedRoute>} />
           <Route path="/users" element={<ProtectedRoute><Users/></ProtectedRoute>} />
           <Route path="/users/:id" element={<ProtectedRoute><User/></ProtectedRoute>} />
           <Route path="/users/:id/edit" element={<ProtectedRoute><EditUser/></ProtectedRoute>} />

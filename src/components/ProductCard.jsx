@@ -6,7 +6,6 @@ const ProductCard = ({ product, actions }) => {
     const [menuOpen, setMenuOpen] = useState(false);
     const menuRef = useRef(null);
 
-    // Detect click outside to close the menu
     useEffect(() => {
         const handleClickOutside = (event) => {
         if (menuRef.current && !menuRef.current.contains(event.target)) {
@@ -22,7 +21,7 @@ const ProductCard = ({ product, actions }) => {
 
         <div className='flex flex-col gap-1.5'>
             <div className='flex justify-between items-center'>
-                <StarRating rating={4} color='#000000' size={8}/>
+                <StarRating rating={product?.averageRating} color='#000000' size={8}/>
 
                 <div className='flex items-center gap-1'>
                     <Heart size={10} color='#000000'/>
@@ -51,11 +50,11 @@ const ProductCard = ({ product, actions }) => {
                 </div>
                 <div className='flex gap-2'>
                     <p className='text-[#00000099] text-xs'>Listed On:</p>
-                    <p className='text-[#000000CC] text-xs'>{product?.listedOn || 'Not listed yet'}</p>
+                    <p className='text-[#000000CC] text-xs'>{formatDate(product?.listedOn) || 'Not listed yet'}</p>
                 </div>
             </div>
 
-            <MoreVertical onClick={() => setMenuOpen((prev) => !prev)} color='#414040' size={14}/>
+            <MoreVertical onClick={() => setMenuOpen((prev) => !prev)} color='#414040' size={14} className='cursor-pointer'/>
         </div>
 
         {menuOpen && (
@@ -104,3 +103,14 @@ const handleStatus = (status)=>{
     </span>
   )
 }
+
+const formatDate = (date) => {
+  if (!date) return '';
+
+  const d = new Date(date);
+  const day = String(d.getDate()).padStart(2, '0');
+  const month = String(d.getMonth() + 1).padStart(2, '0');
+  const year = d.getFullYear();
+
+  return `${day}/${month}/${year}`;
+};
