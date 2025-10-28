@@ -61,8 +61,8 @@ const User = () => {
             </div>
             <div className='flex justify-between items-center'>
               <div className='flex items-center gap-2'>
-                <StarRating rating={4.5}/>
-                <p className='font-medium text-base text-[#202224CC]'>26 reviews</p>
+                <StarRating rating={data?.user?.averageRating}/>
+                <p className='font-medium text-base text-[#202224CC]'>{data?.user?.numReviews} reviews</p>
               </div>
               <p className='font-medium text-base text-[#202224CC] cursor-pointer'>View Reviews</p>
             </div>

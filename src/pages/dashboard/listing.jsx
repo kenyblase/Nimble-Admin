@@ -2,8 +2,9 @@ import { useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { ArrowLeft, LocationEdit } from 'lucide-react'
 import LoadingSpinner from '../../components/LoadingSpinner'
+import ProductImageCarousel from '../../components/ProductImageCarousel'
 import { useQueryClient } from '@tanstack/react-query'
-import { useToggleUserStatus } from '../../utils/useApis/useUserApis/useToggleUserStatus'
+import StarRating from '../../components/StarRating'
 import { useFetchListing } from '../../utils/useApis/useListingAPis/useFetchListings'
 import { useToggleProductStatus } from '../../utils/useApis/useListingAPis/useToggleProductStatus'
 
@@ -83,7 +84,74 @@ const Listing = () => {
         </div>
 
         <div className='flex gap-7 w-full'>
-          
+          <div className='flex flex-col w-full gap-4 pb-2'>
+            <ProductImageCarousel images={data?.images} likes={data?.likes}/>
+
+            <div className='flex flex-col px-4 gap-1'>
+              <div className='flex gap-1 items-center'>
+                <LocationEdit size={8} color='#000000CC'/>
+                <p className='text-xs font-extralight text-[#000000CC]'>{data?.shippingAddress?.city || 'N/A'}, {data?.shippingAddress?.state || 'N/A'}</p>
+              </div>
+
+              <div className='flex flex-col gap-0.5'>
+                <p className='text-sm font-light text-[#000000CC]'>{data?.name}</p>
+                <p className='text-base font-normal text-[#000000]'>₦{(data?.price).toLocaleString()}</p>
+              </div>
+
+              <StarRating rating={data?.averageRating} color='#000000' size={8}/>
+            </div>
+          </div>
+
+          <div className='flex flex-col bg-[#FFFFFF] rounded-lg gap-3 p-4 w-full'>
+            <div className='flex gap-6 items-center'>
+              <div className='flex flex-col gap-0.5 w-[100px]'>
+                <p className='text-[#00000099] text-[10px] font-light'>Type</p>
+                <p className='text-[#000000CC] text-[16px] font-light'>Top</p>
+              </div>
+              <div className='flex flex-col gap-0.5 w-[100px]'>
+                <p className='text-[#00000099] text-[10px] font-light'>Gender</p>
+                <p className='text-[#000000CC] text-[16px] font-light'>{data?.gender}</p>
+              </div>
+            </div>
+            <div className='flex gap-6 items-center'>
+              <div className='flex flex-col gap-0.5 w-[100px]'>
+                <p className='text-[#00000099] text-[10px] font-light'>Condition</p>
+                <p className='text-[#000000CC] text-[16px] font-light'>{data?.condition}</p>
+              </div>
+             <div className="flex flex-col gap-0.5">
+              <p className="text-[#00000099] text-[10px] font-light">Size</p>
+              <div className="flex flex-wrap gap-1">
+                {data?.sizes?.map((size, index) => (
+                  <span
+                    key={index}
+                    className="text-[#000000CC] text-[14px] font-light rounded-md"
+                  >
+                    {size}
+                  </span>
+                ))}
+              </div>
+            </div>
+            </div>
+            <div className='flex gap-6 items-center'>
+              <div className='flex flex-col gap-0.5 w-[100px]'>
+                <p className='text-[#00000099] text-[10px] font-light'>Condition</p>
+                <p className='text-[#000000CC] text-[16px] font-light'>{data?.condition}</p>
+              </div>
+             <div className="flex flex-col gap-0.5">
+              <p className="text-[#00000099] text-[10px] font-light">Colour</p>
+              <div className="flex flex-wrap gap-1">
+                {data?.colours?.map((colour, index) => (
+                  <span
+                    key={index}
+                    className="text-[#000000CC] text-[14px] font-light rounded-md"
+                  >
+                    {colour}
+                  </span>
+                ))}
+              </div>
+            </div>
+            </div>
+          </div>
         </div>
         
         <div className='flex items-center gap-7 w-full'>
