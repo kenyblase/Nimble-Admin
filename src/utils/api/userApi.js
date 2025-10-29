@@ -13,5 +13,8 @@ export const userApi = {
   },
   toggleUserStatus: async (api, id, status) =>{
     return api.put(`admin/users/${id}/status`, { status })
-  }
+  },
+  fetchUserListings: async (api, id, page, limit, status) => {
+    return api.get(`/admin/listings/products/user/${id}?page=${page}&limit=${limit}&status=${status}`);
+  },
 };

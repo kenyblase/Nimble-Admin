@@ -26,4 +26,7 @@ export const categoryApi = {
   getCategoryCommission: async (api, categoryId, filter) => {
     return api.get(`admin/commissions/category?categoryId=${categoryId}&filter=${filter}`);
   },
+  fetchCategoryListings: async (api, id, page, limit, status) => {
+    return api.get(`/admin/listings/products/category/${id}?page=${page}&limit=${limit}&status=${status}`);
+  },
 };

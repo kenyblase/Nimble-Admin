@@ -8,10 +8,17 @@ import { useState } from 'react'
 
 const Home = () => {
     const [page, setPage] = useState(1);
-    const { data:transactions, isLoading:isFetching} = useGetLatestTransactions(page, 10);
+    const [search, setSearch] = useState('')
+    const [debouncedSearch, setDebouncedSearch] = useState("");
+    const { data:transactions, isLoading:isFetching} = useGetLatestTransactions(page, 10, 'all', debouncedSearch);
     const { data, isLoading} = useGetDashboardAnalytics()
 
-    if(isLoading || isFetching) return <LoadingSpinner/>
+    useEffect(() => {
+      const timer = setTimeout(() => setDebouncedSearch(search), 500);
+      return () => clearTimeout(timer);
+    }, [search]);
+
+    if(isLoading) return <LoadingSpinner/>
 
     const analytics = [
     {
@@ -56,8 +63,24 @@ const Home = () => {
         </div>
 
         <div>
-          <RecentTransactionsTable transactions={transactions?.data} page={page} setPage={setPage} totalPages= {transactions?.pagination?.totalPages}/>
+        {isFetching && !debouncedSearch ? 
+          <div className='w-full h-80 flex items-center justify-center'>
+            <div className='w-20 h-20'>
+              <LoadingSpinner size={'size-full'}/>
+            </div>
+          </div>
+        : 
+        < div>
+          <RecentTransactionsTable
+           transactions={transactions?.data} 
+           page={page} setPage={setPage} 
+           totalPages={transactions?.pagination?.totalPages}
+           search={search}
+           setSearch={setSearch}
+          />
         </div>
+        }
+      </div>
     </div>
   )
 }

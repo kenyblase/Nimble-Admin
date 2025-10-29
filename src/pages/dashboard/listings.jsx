@@ -59,7 +59,7 @@ const Listings = () => {
       queryClient.setQueryData(["listing", p._id], p);
       navigate(`/listings/${p._id}`)} 
     },
-    { label: "Remove", onClick: (p) => console.log("Remove", p), variant: "danger" },
+    // { label: "Remove", onClick: (p) => console.log("Remove", p), variant: "danger" },
   ];
 
   return (

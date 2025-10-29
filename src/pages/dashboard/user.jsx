@@ -6,25 +6,39 @@ import ItemTabs from '../../components/ItemTabs'
 import { useQueryClient } from '@tanstack/react-query'
 import { useFetchUser } from '../../utils/useApis/useUserApis/useFetchUsers'
 import StarRating from '../../components/StarRating'
+import Paginator from '../../components/Paginator'
 import { useToggleUserStatus } from '../../utils/useApis/useUserApis/useToggleUserStatus'
+import { useFetchUserListings } from '../../utils/useApis/useUserApis/useFetchUserListings'
+import ProductCard from '../../components/ProductCard'
 
 const User = () => {
     const {id} = useParams()
     const navigate = useNavigate()
     const queryClient = useQueryClient()
     const [itemsActiveTab, setItemsActiveTab] = useState('Active')
+    const [page, setPage] = useState(1)
 
     const {data, isLoading} = useFetchUser(id)
 
     const {toggleUserStatus} = useToggleUserStatus()
 
+    const {data:productData, isLoading:isfetchingProducts} = useFetchUserListings(id, page, 12, formatStatus(itemsActiveTab))
+
     const itemsTabs = [
-    {label: 'Active', count: 12, bgColor: 'bg-[#DEF9D4]', countColor: 'text-[#348352]'}, 
-    {label: 'Review', count: 12, bgColor: 'bg-[#C6C7F880]', countColor: 'text-[#3652AD]'}, 
-    {label: 'Closed', count: 12, bgColor: 'bg-[#F9EDD4]', countColor: 'text-[#FF8911]'}, 
-    {label: 'Rejected', count: 12, bgColor: 'bg-[#F9D8D4]', countColor: 'text-[#E81008]'}, 
-    {label: 'Expired', count: 12, bgColor: 'bg-[#F9D8D4]', countColor: 'text-[#E81008]'},
-  ]
+      {label: 'Active', count: 12, bgColor: 'bg-[#DEF9D4]', countColor: 'text-[#348352]'}, 
+      {label: 'Review', count: 12, bgColor: 'bg-[#C6C7F880]', countColor: 'text-[#3652AD]'}, 
+      {label: 'Closed', count: 12, bgColor: 'bg-[#F9EDD4]', countColor: 'text-[#FF8911]'}, 
+      {label: 'Rejected', count: 12, bgColor: 'bg-[#F9D8D4]', countColor: 'text-[#E81008]'}, 
+      {label: 'Expired', count: 12, bgColor: 'bg-[#F9D8D4]', countColor: 'text-[#E81008]'},
+    ]
+
+    const actions = [
+      { label: "View", onClick: (p) => {
+        queryClient.setQueryData(["listing", p._id], p);
+        navigate(`/listings/${p._id}`)} 
+      },
+      // { label: "Remove", onClick: (p) => console.log("Remove", p), variant: "danger" },
+    ];
 
     if(isLoading) return <LoadingSpinner/>
   return (
@@ -108,11 +122,27 @@ const User = () => {
           </div>
         </div>
         <div className='flex flex-col gap-4'>
-            <h1 className='text-[#202224] text-3xl font-bold'>User Listing</h1>
+            <h1 className='text-[#202224] text-3xl font-bold'>User Listings & Requests</h1>
 
             <div className='flex flex-col pb-10'>
                 <ItemTabs ItemsTabs={itemsTabs} itemsActiveTab={itemsActiveTab} setItemsActiveTab={setItemsActiveTab}/>
 
+                {isfetchingProducts ? 
+                  <div className='w-full h-80 flex items-center justify-center'>
+                    <div className='w-20 h-20'>
+                      <LoadingSpinner size={'size-full'}/>
+                    </div>
+                  </div> : 
+                  <>
+                    <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+                      {productData?.products?.map((p) => (
+                        <ProductCard key={p._id} product={p} actions={actions} />
+                      ))}
+                    </div>
+
+                    <Paginator page={page} setPage={setPage} totalPages={productData?.pagination?.totalPages || 1}/>
+                  </>
+                }
             </div>
         </div>
     </div>
@@ -150,3 +180,13 @@ const handleVerification = (isVerified)=>{
     </span>
   )
 }
+
+const formatStatus = (status) => {
+  if (!status) return "active";
+
+  const normalized = status.trim().toLowerCase();
+
+  if (normalized === "review") return "pending";
+
+  return normalized;
+};

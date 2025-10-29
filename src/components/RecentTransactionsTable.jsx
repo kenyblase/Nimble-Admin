@@ -1,8 +1,26 @@
 import React from 'react'
 import Input from '../components/Input'
+import TransactionModal from '../components/TransactionModal'
 import { MoreVertical, Search } from 'lucide-react'
+import ItemTabs from './ItemTabs';
+import { useState, useEffect, useRef } from 'react';
 
-const RecentTransactionsTable = ({transactions=[], page=1, totalPages, setPage}) => {
+const RecentTransactionsTable = ({transactions=[], page=1, totalPages, setPage, isHomePage=true, itemsTabs, itemsActiveTab, setItemsActiveTab, search, setSearch}) => {
+    const [isModalOpen, setIsModalOpen] = useState(false)
+    const [selectedTransaction, setSelectedTransaction] = useState(null)
+    const [openMenuId, setOpenMenuId] = useState(null);
+    const menuRef = useRef(null);
+
+    useEffect(() => {
+        const handleClickOutside = (e) => {
+          if (menuRef.current && !menuRef.current.contains(e.target)) {
+            setOpenMenuId(null);
+          }
+        };
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => document.removeEventListener("mousedown", handleClickOutside);
+      }, []);
+
     const getPaginationRange = () => {
     const range = [];
     const delta = 1; // neighbors each side of current page
@@ -38,12 +56,22 @@ const RecentTransactionsTable = ({transactions=[], page=1, totalPages, setPage})
 
   return (
     <div className='flex flex-col gap-4 p-6 bg-[#FFFFFF] border border-[#F2E9FF] rounded-2xl'>
-        <h1 className='font-medium text-xl text-[#202224]'>Latest transactions</h1>
+        {isHomePage 
+        ? 
+        <h1 className='font-medium text-xl text-[#202224]'>Latest transactions</h1> 
+        : 
+        <ItemTabs ItemsTabs={itemsTabs} itemsActiveTab={itemsActiveTab} setItemsActiveTab={setItemsActiveTab}/>
+        }
 
         <Input
             icon={Search}
             placeholder={'Search'}
             otherStyles={'h-9'}
+            value={search}
+            handleChange={(e)=>{
+                setPage(1)
+                setSearch(e.target.value)
+            }}
         />
 
       <>
@@ -74,8 +102,32 @@ const RecentTransactionsTable = ({transactions=[], page=1, totalPages, setPage})
                         <td className="p-5 border-b border-l border-r border-[#F5F5F5] font-normal text-sm">
                         {handleStatus(t.status)}
                         </td>
-                        <td className="p-5 border-b border-l border-r border-[#F5F5F5] font-semibold text-base">
-                        <MoreVertical color='#414040'/>
+                        <td className="p-5 border-b border-l border-r border-[#F5F5F5] font-semibold text-base relative">
+                            <button
+                                onClick={() =>
+                                setOpenMenuId(openMenuId === t._id ? null : t._id)
+                                }
+                                className="p-2 hover:bg-gray-100 rounded-full"
+                            >
+                                <MoreVertical color="#414040" size={18} />
+                            </button>
+
+                            {openMenuId === t._id && (
+                                <div
+                                ref={menuRef}
+                                className="absolute right-6 top-[70%] w-36 bg-white shadow-lg rounded-xl border border-gray-100 py-2 z-20 animate-fadeIn"
+                                >
+                                <button
+                                    onClick={() => {
+                                     setSelectedTransaction(t)
+                                     setIsModalOpen(true)
+                                    }}
+                                    className="block w-full text-left px-4 py-2 text-sm text-[#1C357E] hover:bg-gray-50"
+                                >
+                                    View
+                                </button>
+                                </div>
+                            )}
                         </td>
                     </tr>
                     ))}
@@ -136,8 +188,15 @@ const RecentTransactionsTable = ({transactions=[], page=1, totalPages, setPage})
                     Next →
                 </button>
                 </div>
-            </div>) : <p className='text-center'>No Transactions yet</p>}
+            </div>
+            ) : 
+            <p className='text-center'>No Transactions yet</p>}
         </>
+        <TransactionModal
+            isOpen={isModalOpen}
+            onClose={()=>setIsModalOpen(false)}
+            selectedTransaction={selectedTransaction}
+        />
     </div>
   )
 }
