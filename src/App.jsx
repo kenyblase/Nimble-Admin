@@ -25,6 +25,7 @@ import { useAuthStore } from './utils/api/store/useAuthStore';
 
 import LoadingSpinner from './components/LoadingSpinner'
 import EditUser from './pages/dashboard/editUser';
+import Settings from './pages/dashboard/settings';
 
 const ProtectedRoute = ({ children }) => {
   const admin = useAuthStore((state) => state.admin);
@@ -69,6 +70,7 @@ function App() {
           <Route path="/categories/create" element={<ProtectedRoute><CreateCategory/></ProtectedRoute>} />
           <Route path="/categories/:id/edit" element={<ProtectedRoute><EditCategory/></ProtectedRoute>} />
           <Route path="/admins" element={<ProtectedRoute><Admin/></ProtectedRoute>} />
+          <Route path="/settings" element={<ProtectedRoute><Settings/></ProtectedRoute>} />
         </Route>
 
       </Routes>
