@@ -67,7 +67,7 @@ const UsersTable = ({
                   <th className="p-4 border-t border-l border-r border-[#EBEBEB] font-semibold text-base">
                     Full Name
                   </th>
-                  <th className="p-4 border-t border-l border-r border-[#EBEBEB] font-semibold text-base">
+                  <th className="p-4 border-t border-l border-r border-[#EBEBEB] font-semibold text-base whitespace-nowrap">
                     User Id
                   </th>
                   <th className="p-4 border-t border-l border-r border-[#EBEBEB] font-semibold text-base">
