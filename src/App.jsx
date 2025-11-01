@@ -10,6 +10,7 @@ import Home from './pages/dashboard/home';
 import Listings from './pages/dashboard/listings';
 import Listing from './pages/dashboard/listing';
 import Orders from './pages/dashboard/orders';
+import Order from './pages/dashboard/order';
 import Users from './pages/dashboard/users';
 import User from './pages/dashboard/user';
 import EditUser from './pages/dashboard/editUser';
@@ -61,6 +62,7 @@ function App() {
           <Route path="/listings" element={<ProtectedRoute><Listings/></ProtectedRoute>} />
           <Route path="/listings/:id" element={<ProtectedRoute><Listing/></ProtectedRoute>} />
           <Route path="/orders" element={<ProtectedRoute><Orders/></ProtectedRoute>} />
+          <Route path="/orders/:id" element={<ProtectedRoute><Order/></ProtectedRoute>} />
           <Route path="/users" element={<ProtectedRoute><Users/></ProtectedRoute>} />
           <Route path="/users/:id" element={<ProtectedRoute><User/></ProtectedRoute>} />
           <Route path="/users/:id/edit" element={<ProtectedRoute><EditUser/></ProtectedRoute>} />

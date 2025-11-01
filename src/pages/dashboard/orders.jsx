@@ -4,8 +4,9 @@ import LoadingSpinner from '../../components/LoadingSpinner'
 import { useEffect } from 'react'
 import AnalyticsCard from '../../components/AnalyticsCard'
 import ItemTabs from '../../components/ItemTabs'
-import { useFetchUsers } from '../../utils/useApis/useUserApis/useFetchUsers'
-import { useFetchUserAnalytics } from '../../utils/useApis/useUserApis/useFetchUserAnalytics'
+import { useFetchOrderAnalytics } from '../../utils/useApis/useOrderApis/useFetchOrderAnalytics'
+import { useFetchOrders } from '../../utils/useApis/useOrderApis/useFetchOrders'
+import OrdersTable from '../../components/OrdersTable'
 
 const Orders = () => {
   const [page, setPage] = useState(1)
@@ -13,42 +14,36 @@ const Orders = () => {
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const [itemsActiveTab, setItemsActiveTab] = useState('All')
 
-  const {data, isLoading} = useFetchUsers(page, 10, debouncedSearch, itemsActiveTab === 'All' ? '' : itemsActiveTab.toLowerCase())
-  const {data:analytics, isLoading:loading} = useFetchUserAnalytics()
+  const {data, isLoading} = useFetchOrders(page, 10, debouncedSearch, itemsActiveTab === 'All' ? '' : itemsActiveTab.toLowerCase())
+  const {data:analytics, isLoading:loading} = useFetchOrderAnalytics()
   // Debounce search input (500ms)
   useEffect(() => {
+    console.log(data)
     const timer = setTimeout(() => setDebouncedSearch(search), 500);
     return () => clearTimeout(timer);
   }, [search]);
 
-  const userAnalytics = [
+  const orderAnalytics = [
     {
-      title: "Active Users",
-      value: analytics?.activeUsers?.value,
-      trendPercent: analytics?.activeUsers?.change,
-      trendDirection: analytics?.activeUsers?.trend,
-      trendLabel: analytics?.activeUsers?.duration,
+      title: "Total Orders",
+      value: analytics?.totalOrders?.value,
+      trendPercent: analytics?.totalOrders?.change,
+      trendDirection: analytics?.totalOrders?.trend,
+      trendLabel: analytics?.totalOrders?.duration,
     },
     {
-      title: "Verified Users",
-      value: analytics?.verifiedUsers?.value,
-      trendPercent: analytics?.verifiedUsers?.change,
-      trendDirection: analytics?.verifiedUsers?.trend,
-      trendLabel: analytics?.verifiedUsers?.duration,
+      title: "Completed Orders",
+      value: analytics?.completedOrders?.value,
+      trendPercent: analytics?.completedOrders?.change,
+      trendDirection: analytics?.completedOrders?.trend,
+      trendLabel: analytics?.completedOrders?.duration,
     },
     {
-      title: "Suspended Users",
-      value: analytics?.suspendedUsers?.value,
-      trendPercent: analytics?.suspendedUsers?.change,
-      trendDirection: analytics?.suspendedUsers?.trend,
-      trendLabel: analytics?.suspendedUsers?.duration,
-    },
-    {
-      title: "Banned Users",
-      value: analytics?.bannedUsers?.value,
-      trendPercent: analytics?.bannedUsers?.change,
-      trendDirection: analytics?.bannedUsers?.trend,
-      trendLabel: analytics?.bannedUsers?.duration,
+      title: "Pending Orders",
+      value: analytics?.pendingOrders?.value,
+      trendPercent: analytics?.pendingOrders?.change,
+      trendDirection: analytics?.pendingOrders?.trend,
+      trendLabel: analytics?.pendingOrders?.duration,
     },
   ];
 
@@ -70,7 +65,7 @@ const Orders = () => {
                       <LoadingSpinner size='size-20'/> 
                     </div>
             :
-            userAnalytics.map((card, index)=>(
+            orderAnalytics.map((card, index)=>(
                   <AnalyticsCard key={index} {...card} />
             ))
           }
@@ -86,8 +81,8 @@ const Orders = () => {
         : 
         < div className='flex flex-col gap-4 p-6 bg-[#FFFFFF] border border-[#F2E9FF] rounded-2xl relative'>
           <ItemTabs ItemsTabs={itemsTabs} itemsActiveTab={itemsActiveTab} setItemsActiveTab={setItemsActiveTab}/>
-          <UsersTable 
-          users={data?.users} 
+          <OrdersTable 
+          orders={data?.orders} 
           totalPages={data?.totalPages} 
           page={page} 
           setPage={setPage} 
