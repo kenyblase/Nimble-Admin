@@ -15,7 +15,6 @@ import Users from './pages/dashboard/users';
 import User from './pages/dashboard/user';
 import EditUser from './pages/dashboard/editUser';
 import Transactions from './pages/dashboard/transactions';
-import Transaction from './pages/dashboard/transaction';
 import Payouts from './pages/dashboard/payouts';
 import Categories from './pages/dashboard/categories';
 import Category from './pages/dashboard/category';
@@ -67,7 +66,6 @@ function App() {
           <Route path="/users/:id" element={<ProtectedRoute><User/></ProtectedRoute>} />
           <Route path="/users/:id/edit" element={<ProtectedRoute><EditUser/></ProtectedRoute>} />
           <Route path="/transactions" element={<ProtectedRoute><Transactions/></ProtectedRoute>} />
-          <Route path="/transactions/:id" element={<ProtectedRoute><Transaction/></ProtectedRoute>} />
           <Route path="/payouts" element={<ProtectedRoute><Payouts/></ProtectedRoute>} />
           <Route path="/categories" element={<ProtectedRoute><Categories/></ProtectedRoute>} />
           <Route path="/categories/:id" element={<ProtectedRoute><Category/></ProtectedRoute>} />

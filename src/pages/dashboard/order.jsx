@@ -3,9 +3,9 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { ArrowLeft } from 'lucide-react'
 import LoadingSpinner from '../../components/LoadingSpinner'
 import { useQueryClient } from '@tanstack/react-query'
-import StarRating from '../../components/StarRating'
 import { useToggleUserStatus } from '../../utils/useApis/useUserApis/useToggleUserStatus'
 import { useFetchOrder } from '../../utils/useApis/useOrderApis/useFetchOrders'
+import { useEffect } from 'react'
 
 const Order = () => {
     const {id} = useParams()
@@ -15,6 +15,10 @@ const Order = () => {
     const {data, isLoading} = useFetchOrder(id)
 
     const {toggleUserStatus} = useToggleUserStatus()
+
+    useEffect(()=>{
+      console.log(data.user)
+    }, [])
 
     if(isLoading) return <LoadingSpinner/>
   return (
@@ -44,6 +48,7 @@ const Order = () => {
                 </div>
             </div>
         </div>
+
         <div className='flex flex-col gap-4'>
           <div className='flex justify-between items-center bg-[#FFFFFF] border border-[#0000000D] py-6 px-4'>
             <div className='flex flex-col gap-3'>
@@ -74,6 +79,42 @@ const Order = () => {
               <p className='font-medium text-base text-[#202224]'>Status</p>
               <div className='bg-[#DEF9D4] text-center rounded-sm'>
                 {handleStatus(data?.transactionStatus)}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className='flex gap-4'>
+          <div className='flex flex-col gap-3 p-4 bg-[#FFFFFF] rounded-lg border border-[#0000000D] w-full'>
+            <div className='flex flex-col gap-2'>
+              <p className='text-sm text-[#000000CC] font-normal'>Shipping address</p>
+
+              <div className='flex flex-col gap-0.5 pb-2'>
+                <p className='text-sm text-[#00000099] font-light'>{data?.product?.shippingAddress?.name}</p>
+                <p className='text-sm text-[#00000099] font-light'>{data?.product?.shippingAddress?.phoneNumber}</p>
+                <p className='text-sm text-[#00000099] font-light'>{data?.product?.shippingAddress?.address},</p>
+                <p className='text-sm text-[#00000099] font-light'>{data?.product?.shippingAddress?.city}, {data?.product?.shippingAddress?.state}</p>
+              </div>
+            </div>
+          </div>
+          <div className='flex flex-col gap-3 p-4 bg-[#FFFFFF] rounded-lg border border-[#0000000D] w-full'>
+            <div className='flex flex-col gap-2'>
+              <p className='text-sm text-[#000000CC] font-normal'>Delivery address</p>
+
+              <div className='flex flex-col gap-0.5 pb-2'>
+                <p className='text-sm text-[#00000099] font-light'>{data?.deliveryAddress?.name}</p>
+                <p className='text-sm text-[#00000099] font-light'>{data?.deliveryAddress?.phoneNumber}</p>
+                <p className='text-sm text-[#00000099] font-light'>{data?.deliveryAddress?.address},</p>
+                <p className='text-sm text-[#00000099] font-light'>{data?.deliveryAddress?.city}, {data?.product?.shippingAddress?.state}</p>
+              </div>
+            </div>
+          </div>
+          <div className='flex flex-col gap-3 p-4 bg-[#FFFFFF] rounded-lg border border-[#0000000D] w-full'>
+            <div className='flex flex-col jus gap-2'>
+              <p className='text-sm text-[#000000CC] font-normal'>Payment Method</p>
+
+              <div className='flex flex-col gap-0.5 pb-2'>
+                <p className='text-sm text-[#00000099] font-light'>{data?.paymentMethod}</p>
               </div>
             </div>
           </div>

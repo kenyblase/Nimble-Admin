@@ -2,10 +2,9 @@ import { useState } from 'react'
 import LoadingSpinner from '../../components/LoadingSpinner'
 import { useEffect } from 'react'
 import AnalyticsCard from '../../components/AnalyticsCard'
-import ItemTabs from '../../components/ItemTabs'
-import { useFetchUserAnalytics } from '../../utils/useApis/useUserApis/useFetchUserAnalytics'
 import { useGetLatestTransactions } from '../../utils/useApis/useDashboardApis/useGetLatestTransactions'
 import RecentTransactionsTable from '../../components/RecentTransactionsTable'
+import { useGetTransactionAnalytics } from '../../utils/useApis/useDashboardApis/useGetTransactionAnalytics'
 
 const Transactions = () => {
   const [page, setPage] = useState(1)
@@ -14,27 +13,27 @@ const Transactions = () => {
   const [itemsActiveTab, setItemsActiveTab] = useState('All')
 
   const { data:transactions, isLoading:isFetching} = useGetLatestTransactions(page, 10, formatStatus(itemsActiveTab), debouncedSearch);
-  const {data:analytics, isLoading:loading} = useFetchUserAnalytics()
+  const {data:analytics, isLoading:loading} = useGetTransactionAnalytics()
   // Debounce search input (500ms)
   useEffect(() => {
     const timer = setTimeout(() => setDebouncedSearch(search), 500);
     return () => clearTimeout(timer);
   }, [search]);
 
-  const userAnalytics = [
+  const transactionAnalytics = [
     {
       title: "Total Pay-in",
-      value: analytics?.activeUsers?.value,
-      trendPercent: analytics?.activeUsers?.change,
-      trendDirection: analytics?.activeUsers?.trend,
-      trendLabel: analytics?.activeUsers?.duration,
+      value: analytics?.payIn?.value,
+      trendPercent: analytics?.payIn?.change,
+      trendDirection: analytics?.payIn?.trend,
+      trendLabel: analytics?.payIn?.duration,
     },
     {
       title: "Total Pay-out",
-      value: analytics?.verifiedUsers?.value,
-      trendPercent: analytics?.verifiedUsers?.change,
-      trendDirection: analytics?.verifiedUsers?.trend,
-      trendLabel: analytics?.verifiedUsers?.duration,
+      value: analytics?.payOut?.value,
+      trendPercent: analytics?.payOut?.change,
+      trendDirection: analytics?.payOut?.trend,
+      trendLabel: analytics?.payOut?.duration,
     },
   ];
 
@@ -56,7 +55,7 @@ const Transactions = () => {
                       <LoadingSpinner size='size-20'/> 
                     </div>
             :
-            userAnalytics.map((card, index)=>(
+            transactionAnalytics.map((card, index)=>(
                   <AnalyticsCard key={index} {...card} />
             ))
           }
