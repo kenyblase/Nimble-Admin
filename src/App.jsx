@@ -27,6 +27,7 @@ import { useCheckAuth } from './utils/useApis/useAuthApis/useCheckAuth';
 import { useAuthStore } from './utils/api/store/useAuthStore';
 
 import LoadingSpinner from './components/LoadingSpinner'
+import Appeals from './pages/dashboard/support';
 
 const ProtectedRoute = ({ children }) => {
   const admin = useAuthStore((state) => state.admin);
@@ -72,6 +73,7 @@ function App() {
           <Route path="/categories/create" element={<ProtectedRoute><CreateCategory/></ProtectedRoute>} />
           <Route path="/categories/:id/edit" element={<ProtectedRoute><EditCategory/></ProtectedRoute>} />
           <Route path="/admins" element={<ProtectedRoute><Admin/></ProtectedRoute>} />
+          <Route path="/appeals" element={<ProtectedRoute><Appeals/></ProtectedRoute>} />
           <Route path="/settings" element={<ProtectedRoute><Settings/></ProtectedRoute>} />
         </Route>
 
