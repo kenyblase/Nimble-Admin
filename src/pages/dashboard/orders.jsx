@@ -18,7 +18,6 @@ const Orders = () => {
   const {data:analytics, isLoading:loading} = useFetchOrderAnalytics()
   // Debounce search input (500ms)
   useEffect(() => {
-    console.log(data)
     const timer = setTimeout(() => setDebouncedSearch(search), 500);
     return () => clearTimeout(timer);
   }, [search]);

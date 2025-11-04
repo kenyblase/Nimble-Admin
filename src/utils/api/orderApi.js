@@ -5,6 +5,12 @@ export const orderApi = {
    fetchOrder: async (api, id) => {
     return api.get(`/admin/orders/${id}`);
   },
+   cancelOrder: async (api, id) => {
+    return api.put(`/admin/orders/${id}/cancel`);
+  },
+   completeOrder: async (api, id) => {
+    return api.put(`/admin/orders/${id}/complete`);
+  },
   fetchOrderAnalytics: async (api) => {
     return api.get(`/admin/orders/analytics`);
   },

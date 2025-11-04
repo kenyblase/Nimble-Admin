@@ -3,6 +3,7 @@ import Input from "../components/Input";
 import { MoreVertical, Search } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useToggleUserStatus } from "../utils/useApis/useUserApis/useToggleUserStatus";
+import { useUpdateOrder } from "../utils/useApis/useOrderApis/useUpdateOrder";
 
 const OrdersTable = ({
   orders = [],
@@ -16,7 +17,7 @@ const OrdersTable = ({
   const menuRef = useRef(null);
   const navigate = useNavigate()
 
-  const {toggleUserStatus} = useToggleUserStatus()
+  const {cancelOrder, completeOrder} = useUpdateOrder()
 
   // close menu when clicked outside
   useEffect(() => {
@@ -141,32 +142,37 @@ const OrdersTable = ({
                           >
                             View
                           </button>
-                          <button
-                            onClick={async()=>{
-                              await toggleUserStatus(order._id, 'suspended')
-                              setOpenMenuId(null)
-                            }} 
-                            className="block w-full text-left px-4 py-2 text-sm text-[#1C357E] hover:bg-gray-50"
-                          >
-                            Mark as completed
-                          </button>
-                          <button
-                            onClick={async()=>{
-                              await toggleUserStatus(order._id, 'banned')
-                              setOpenMenuId(null)
-                            }} 
-                            className="block w-full text-left px-4 py-2 text-sm text-[#1C357E] hover:bg-gray-50"
-                          >
-                            Mark as pending
-                          </button>
-                          <button
-                            onClick={() =>{
-                              navigate(`/orders/${id}/edit`)
-                            }}
-                            className="block w-full text-left px-4 py-2 text-sm text-[#EF4444] hover:bg-gray-50"
-                          >
-                            Cancel Order
-                          </button>
+                          {order?.transactionStatus === 'pending' &&
+                          <>
+                            <button
+                              onClick={async()=>{
+                                await completeOrder(order._id)
+                                setOpenMenuId(null)
+                              }} 
+                              className="block w-full text-left px-4 py-2 text-sm text-[#1C357E] hover:bg-gray-50"
+                            >
+                              Mark as completed
+                            </button>
+                            <button
+                              onClick={async() =>{
+                                await cancelOrder(order._id)
+                                setOpenMenuId(null)
+                              }}
+                              className="block w-full text-left px-4 py-2 text-sm text-[#EF4444] hover:bg-gray-50"
+                              >
+                              Cancel Order
+                            </button>
+                          </>
+                          }
+                            {/* <button
+                              onClick={async()=>{
+                                await cancelOrder(order._id)
+                                setOpenMenuId(null)
+                              }} 
+                              className="block w-full text-left px-4 py-2 text-sm text-[#1C357E] hover:bg-gray-50"
+                            >
+                              Mark as pending
+                            </button> */}
                         </div>
                       )}
                     </td>
