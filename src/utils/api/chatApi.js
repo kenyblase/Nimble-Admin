@@ -5,4 +5,7 @@ export const chatApi = {
   fetchChat: async (api, id) => {
     return api.get(`/chats/${id}`);
   },
+  sendMessage: async (api, id, text) => {
+    return api.post(`chats/admin/${id}/message`, { text });
+  },
 };
