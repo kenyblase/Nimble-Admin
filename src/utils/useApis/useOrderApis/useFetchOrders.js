@@ -15,8 +15,8 @@ const fetchOrders = async (api, page, limit, search, filter) => {
 const fetchOrder = async (api, id) => {
   try {
     const res = await orderApi.fetchOrder(api, id);
-    const category = res.data
-    return category;
+    const order = res.data
+    return order;
   } catch (err) {
     console.log(err)
     return null;

@@ -12,11 +12,12 @@ const fetchChats = async (api) => {
   }
 };
 
-const fetchOrder = async (api, id) => {
+const fetchChat = async (api, id) => {
   try {
-    const res = await orderApi.fetchOrder(api, id);
-    const category = res.data
-    return category;
+    const res = await chatApi.fetchChat(api, id);
+    const chat = res.data.data
+    console.log(chat)
+    return chat;
   } catch (err) {
     console.log(err)
     return null;
@@ -35,13 +36,13 @@ export const useFetchChats = () => {
   });
 };
 
-export const useFetchOrder = (id) => {
+export const useFetchChat = (id) => {
   const api = useApiClient();
 
   return useQuery({
-    queryKey: ['order', id],
+    queryKey: ['chat', id],
     queryFn: async () => {
-      return await fetchOrder(api, id);
+      return await fetchChat(api, id);
     },
     enabled: !!id,
     retry: false,

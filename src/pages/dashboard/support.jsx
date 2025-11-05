@@ -1,16 +1,59 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Tabs from '../../components/Tabs'
 import { useQueryClient } from '@tanstack/react-query'
-import { useFetchChats } from '../../utils/useApis/useChatApi.js/useFetchChats'
+import { useFetchChat, useFetchChats } from '../../utils/useApis/useChatApi.js/useFetchChats'
+import { initSocket } from '../../utils/socket/socket'
+import { useAuthStore } from '../../utils/api/store/useAuthStore'
+import LoadingSpinner from '../../components/LoadingSpinner'
 
 const Appeals = () => {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
-
-  const {data:chatListData, isLoading:IsChatListLoading} = useFetchChats()
-
   const [activeTab, setActiveTab] = useState('Appeals')
+  const [selectedChatId, setSelectedChatId] = useState(null)
+
+  const {admin} = useAuthStore()
+  const {data:chatListData, isLoading:IsChatListLoading} = useFetchChats()
+  const {data:chatData, isLoading:isChatLoading} = useFetchChat(selectedChatId)
+
+  useEffect(() => {
+  if (!admin?._id) return;
+
+  const socket = initSocket(admin._id);
+  socket.on("newChat", (chat) => {
+    queryClient.setQueryData(["chatList"], (old = []) => [chat, ...old]);
+  });
+
+  socket.on("newMessage", (message) => {
+    // Update messages
+    queryClient.setQueryData(["messages", message.chatId], (old = []) => [
+      ...old,
+      message,
+    ]);
+
+    // Update chat list & move to top
+    queryClient.setQueryData(["chats"], (old = []) => {
+      const chatToUpdate = old.find((chat) => chat._id === message.chatId);
+      if (!chatToUpdate) return old;
+
+      const updatedChat = {
+        ...chatToUpdate,
+        lastMessage: message.text || message.type,
+        updatedAt: message.createdAt,
+      };
+
+      return [updatedChat, ...old.filter((chat) => chat._id !== message.chatId)];
+    });
+  });
+
+  return () => {
+    socket.off("newChat");
+    socket.off("newMessage");
+  };
+}, [queryClient, admin]);
+
+
 
   const tabs = ['Appeals', 'Support requests', 'Chats']
 
@@ -29,7 +72,8 @@ const Appeals = () => {
                 {chatListData.map((chat) => (
                     <div
                     key={chat._id}
-                    className="flex flex-col rounded-[10px] py-2.5 px-4 bg-[#EDF4FF] w-[360px] cursor-pointer"
+                    onClick={()=>setSelectedChatId(chat._id)}
+                    className={`flex flex-col rounded-[10px] py-2.5 px-4 ${selectedChatId === chat._id ? 'bg-[#EDF4FF]' : 'bg-[#FFFFFF] border-b border-[#E9F1FF]'} w-[360px] cursor-pointer`}
                     >
                     <div className="flex gap-3 w-full">
                         <img
@@ -55,6 +99,20 @@ const Appeals = () => {
                     </div>
                 ))}
                 </div>
+            </div>
+
+            <div className='flex flex-col justify-between rounded-lg border border-[#D3E4FE80] pt-6 bg-[#FFFFFF] w-full'>
+              {!selectedChatId && 
+                <div className='flex items-center justify-center'>
+                  <p className='font-medium text-[#000000] text-lg'>No Chat Selected</p>
+                </div>
+              }
+              {selectedChatId && isChatLoading && <LoadingSpinner/>}
+              {selectedChatId && !isChatLoading &&
+                <div className='flex justify-between border-b border-[#0000001A] px-10 pb-4'>
+                  <p className='font-medium text-[#000000] text-lg'>{chatData?.chat?.seller?.firstName} & {chatData?.chat?.buyer?.firstName} <span className='font-light text-[#000000CC] text-lg'>{`(${chatData?.chat?.product?.name})`}</span></p>
+                </div>
+              }
             </div>
         </div>
       }
