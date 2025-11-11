@@ -2,10 +2,12 @@ import Input from '../components/Input'
 import { MoreVertical, Search } from 'lucide-react'
 import ItemTabs from './ItemTabs';
 import { useState, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const AppealsTable = ({appeals=[], page=1, totalPages, setPage, itemsTabs, itemsActiveTab, setItemsActiveTab, search, setSearch}) => {
     const [openMenuId, setOpenMenuId] = useState(null);
-    const menuRef = useRef(null);
+    const menuRef = useRef(null)
+    const navigate = useNavigate()
 
     const getPaginationRange = () => {
     const range = [];
@@ -71,38 +73,62 @@ const AppealsTable = ({appeals=[], page=1, totalPages, setPage, itemsTabs, items
                     </tr>
                 </thead>
                 <tbody>
-                    {appeals.map((t, idx) => (
-                    <tr key={idx} className="border-b">
-                        <td className="p-5 border-b border-l border-r border-[#F5F5F5] font-normal text-sm text-[#071832]">{t.type}</td>
-                        <td className="p-5 border-b border-l border-r border-[#F5F5F5] font-normal text-sm text-[#071832]">{t._id}</td>
-                        <td className="p-5 border-b border-l border-r border-[#F5F5F5] font-normal text-sm text-[#071832]">{t.user.firstName} {t.user.lastName}</td>
-                        <td className="p-5 border-b border-l border-r border-[#F5F5F5] font-normal text-sm text-[#071832]">{t?.buyer ? `${t.buyer.firstName} ${t.buyer.lastName}` : 'N/A'}</td>
-                        <td className="p-5 border-b border-l border-r border-[#F5F5F5] font-normal text-sm text-[#071832]">{new Date(t.createdAt).toLocaleDateString('en-GB')}</td>
+                    {appeals.map((a, idx) => (
+                        <tr key={idx} className="border-b">
+                        <td className="p-5 border-b border-l border-r border-[#F5F5F5] font-normal text-sm text-[#071832]">{a._id}</td>
+                        <td className="p-5 border-b border-l border-r border-[#F5F5F5] font-normal text-sm text-[#071832]">{a.user.firstName} {a.user.lastName}</td>
+                        <td className="p-5 border-b border-l border-r border-[#F5F5F5] font-normal text-sm text-[#071832]">{a.category}</td>
+                        <td className="p-5 border-b border-l border-r border-[#F5F5F5] font-normal text-sm text-[#071832]">{a.subject}</td>
+                        <td className="p-5 border-b border-l border-r border-[#F5F5F5] font-normal text-sm text-[#071832]">{new Date(a.createdAt).toLocaleDateString('en-GB')}</td>
                         <td className="p-5 border-b border-l border-r border-[#F5F5F5] font-normal text-sm">
-                        {handleStatus(t.status)}
+                        {handleStatus(a.status)}
                         </td>
                         <td className="p-5 border-b border-l border-r border-[#F5F5F5] font-semibold text-base relative">
                             <button
                                 onClick={() =>
-                                setOpenMenuId(openMenuId === t._id ? null : t._id)
+                                setOpenMenuId(openMenuId === a._id ? null : a._id)
                                 }
-                                className="p-2 hover:bg-gray-100 rounded-full"
+                                className="p-2 hover:bg-gray-100 rounded-full cursor-pointer"
                             >
                                 <MoreVertical color="#414040" size={18} />
                             </button>
 
-                            {openMenuId === t._id && (
+                            {openMenuId === a._id && (
                                 <div
                                 ref={menuRef}
                                 className="absolute right-6 top-[70%] w-36 bg-white shadow-lg rounded-xl border border-gray-100 py-2 z-20 animate-fadeIn"
                                 >
                                 <button
                                     onClick={() => {
-                                     
+                                     navigate(`/appeals/${a._id}`)
                                     }}
                                     className="block w-full text-left px-4 py-2 text-sm text-[#1C357E] hover:bg-gray-50"
                                 >
                                     View
+                                </button>
+                                 <button
+                                    onClick={() => {
+                                     
+                                    }}
+                                    className="block w-full text-left px-4 py-2 text-sm text-[#1C357E] hover:bg-gray-50"
+                                >
+                                    Open
+                                </button>
+                                <button
+                                    onClick={() => {
+                                     
+                                    }}
+                                    className="block w-full text-left px-4 py-2 text-sm text-[#1C357E] hover:bg-gray-50"
+                                >
+                                    Close
+                                </button>
+                                <button
+                                    onClick={() => {
+                                     
+                                    }}
+                                    className="block w-full text-left px-4 py-2 text-sm text-[#1C357E] hover:bg-gray-50"
+                                >
+                                    Mark as resolved
                                 </button>
                                 </div>
                             )}
@@ -168,7 +194,7 @@ const AppealsTable = ({appeals=[], page=1, totalPages, setPage, itemsTabs, items
                 </div>
             </div>
             ) : 
-            <p className='text-center'>No Requests yet</p>}
+            <p className='text-center'>No Appeals yet</p>}
         </>
     </div>
   )
@@ -177,12 +203,12 @@ const AppealsTable = ({appeals=[], page=1, totalPages, setPage, itemsTabs, items
 export default AppealsTable
 
 const handleStatus = (status)=>{
-  if(status === 'successful') return (
+  if(status === 'resolved') return (
     <span className={`w-fit text-sm font-medium flex items-center gap-1 py-1 px-3 rounded-lg bg-[#DEF9D4] text-[#348352]`}>
       {status}
     </span>
   )
-  else if(status === 'failed') return (
+  else if(status === 'closed') return (
     <span className={`w-fit text-sm font-medium flex items-center gap-1 py-1 px-3 rounded-lg bg-[#F9D8D4] text-[#FF640F]`}>
       {status}
     </span>

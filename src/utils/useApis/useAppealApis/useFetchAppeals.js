@@ -12,9 +12,9 @@ const fetchAppeals = async (api, page, type, limit, search, filter) => {
   }
 };
 
-const fetchUser = async (api, id) => {
+const fetchAppeal = async (api, id) => {
   try {
-    const res = await userApi.fetchUser(api, id);
+    const res = await appealApi.getAppeal(api, id);
     const category = res.data
     return category;
   } catch (err) {
@@ -35,13 +35,13 @@ export const useFetchAppeals = (type='appeal', page=1, limit=10, search='', filt
   });
 };
 
-export const useFetchUser = (id) => {
+export const useFetchAppeal = (id) => {
   const api = useApiClient();
 
   return useQuery({
-    queryKey: ['user', id],
+    queryKey: ['appeal', id],
     queryFn: async () => {
-      return await fetchUser(api, id);
+      return await fetchAppeal(api, id);
     },
     enabled: !!id,
     retry: false,
