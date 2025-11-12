@@ -148,9 +148,11 @@ const handleSendMessage = async()=>{
 
                           <div className='flex flex-col gap-1'>
                             <p className='text-xs text-[#00000080] font-medium'>{senderName}</p>
-                            <div className='max-w-[300px] rounded-tl-xl rounded-tr-3xl rounded-br-3xl py-2 px-3 bg-[#EDF4FF]'>
-                              <p className='font-light text-base text-[#000000]'>{msg.text}</p>
-                            </div>
+                           { msg.type === 'text' &&
+                              <div className='max-w-[300px] rounded-tl-xl rounded-tr-3xl rounded-br-3xl py-2 px-3 bg-[#EDF4FF]'>
+                                <p className='font-light text-base text-[#000000]'>{msg.text}</p>
+                              </div>
+                            }
                             <p className='font-light text-[10px] text-[#00000099]'>{formatUTCToLocalTimeAgo(msg.createdAt)}</p>
                           </div>
                         </div>

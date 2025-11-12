@@ -3,11 +3,13 @@ import { MoreVertical, Search } from 'lucide-react'
 import ItemTabs from './ItemTabs';
 import { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useToggleAppealStatus } from '../utils/useApis/useAppealApis/useToggleAppealStatus';
 
 const AppealsTable = ({appeals=[], page=1, totalPages, setPage, itemsTabs, itemsActiveTab, setItemsActiveTab, search, setSearch}) => {
     const [openMenuId, setOpenMenuId] = useState(null);
     const menuRef = useRef(null)
     const navigate = useNavigate()
+    const {toggleAppealStatus} = useToggleAppealStatus()
 
     const getPaginationRange = () => {
     const range = [];
@@ -63,7 +65,8 @@ const AppealsTable = ({appeals=[], page=1, totalPages, setPage, itemsTabs, items
                 <table className="w-full border">
                 <thead className="bg-[#E9F1FF] text-[#1C5ECA]">
                     <tr className="text-left text-xs px-4">
-                    <th className="p-4 border-t border-l border-r border-[#EBEBEB] font-semibold text-base">ID</th>
+                    <th className="p-4 border-t border-l border-r border-[#EBEBEB] font-semibold text-base">Appeal ID</th>
+                    <th className="p-4 border-t border-l border-r border-[#EBEBEB] font-semibold text-base">Order ID</th>
                     <th className="p-4 border-t border-l border-r border-[#EBEBEB] font-semibold text-base">User</th>
                     <th className="p-4 border-t border-l border-r border-[#EBEBEB] font-semibold text-base">Category</th>
                     <th className="p-4 border-t border-l border-r border-[#EBEBEB] font-semibold text-base">Subject</th>
@@ -75,13 +78,14 @@ const AppealsTable = ({appeals=[], page=1, totalPages, setPage, itemsTabs, items
                 <tbody>
                     {appeals.map((a, idx) => (
                         <tr key={idx} className="border-b">
-                        <td className="p-5 border-b border-l border-r border-[#F5F5F5] font-normal text-sm text-[#071832]">{a._id}</td>
-                        <td className="p-5 border-b border-l border-r border-[#F5F5F5] font-normal text-sm text-[#071832]">{a.user.firstName} {a.user.lastName}</td>
-                        <td className="p-5 border-b border-l border-r border-[#F5F5F5] font-normal text-sm text-[#071832]">{a.category}</td>
-                        <td className="p-5 border-b border-l border-r border-[#F5F5F5] font-normal text-sm text-[#071832]">{a.subject}</td>
-                        <td className="p-5 border-b border-l border-r border-[#F5F5F5] font-normal text-sm text-[#071832]">{new Date(a.createdAt).toLocaleDateString('en-GB')}</td>
+                        <td className="p-5 border-b border-l border-r border-[#F5F5F5] font-normal text-sm text-[#071832] max-w-30 truncate">{a._id}</td>
+                        <td className="p-5 border-b border-l border-r border-[#F5F5F5] font-normal text-sm text-[#071832] max-w-30 truncate">{a?.order || 'N/A'}</td>
+                        <td className="p-5 border-b border-l border-r border-[#F5F5F5] font-normal text-sm text-[#071832]">{a?.user?.firstName} {a?.user?.lastName}</td>
+                        <td className="p-5 border-b border-l border-r border-[#F5F5F5] font-normal text-sm text-[#071832]">{a?.category}</td>
+                        <td className="p-5 border-b border-l border-r border-[#F5F5F5] font-normal text-sm text-[#071832]">{a?.subject}</td>
+                        <td className="p-5 border-b border-l border-r border-[#F5F5F5] font-normal text-sm text-[#071832]">{new Date(a?.createdAt).toLocaleDateString('en-GB')}</td>
                         <td className="p-5 border-b border-l border-r border-[#F5F5F5] font-normal text-sm">
-                        {handleStatus(a.status)}
+                        {handleStatus(a?.status)}
                         </td>
                         <td className="p-5 border-b border-l border-r border-[#F5F5F5] font-semibold text-base relative">
                             <button
@@ -106,30 +110,36 @@ const AppealsTable = ({appeals=[], page=1, totalPages, setPage, itemsTabs, items
                                 >
                                     View
                                 </button>
-                                 <button
-                                    onClick={() => {
-                                     
-                                    }}
-                                    className="block w-full text-left px-4 py-2 text-sm text-[#1C357E] hover:bg-gray-50"
-                                >
-                                    Open
-                                </button>
-                                <button
-                                    onClick={() => {
-                                     
-                                    }}
-                                    className="block w-full text-left px-4 py-2 text-sm text-[#1C357E] hover:bg-gray-50"
-                                >
-                                    Close
-                                </button>
-                                <button
-                                    onClick={() => {
-                                     
-                                    }}
-                                    className="block w-full text-left px-4 py-2 text-sm text-[#1C357E] hover:bg-gray-50"
-                                >
-                                    Mark as resolved
-                                </button>
+                                 {a.status !== 'open' && 
+                                    <button
+                                        onClick={async()=>{
+                                            await toggleAppealStatus(a._id, 'open')
+                                        }} 
+                                        className="block w-full text-left px-4 py-2 text-sm text-[#1C357E] hover:bg-gray-50"
+                                    >
+                                        Open
+                                    </button>
+                                }
+                                {a.status !== 'closed' && 
+                                    <button
+                                        onClick={async()=>{
+                                            await toggleAppealStatus(a._id, 'closed')
+                                        }} 
+                                        className="block w-full text-left px-4 py-2 text-sm text-[#1C357E] hover:bg-gray-50"
+                                    >
+                                        Close
+                                    </button>
+                                }
+                                {a.status !== 'resolved' && 
+                                    <button
+                                        onClick={async()=>{
+                                            await toggleAppealStatus(a._id, 'resolved')
+                                        }} 
+                                        className="block w-full text-left px-4 py-2 text-sm text-[#1C357E] hover:bg-gray-50"
+                                    >
+                                        Mark as resolved
+                                    </button>
+                                }
                                 </div>
                             )}
                         </td>

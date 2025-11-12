@@ -27,12 +27,12 @@ export const useToggleAppealStatus = () => {
       queryClient.setQueriesData({ queryKey: ['appealList'] }, (old) => {
         if (!old) return old;
 
-        if (Array.isArray(old)) {
+        if (Array.isArray(old?.appeals)) {
           return {
             ...old,
             appeals: old.appeals.map((appeal) =>
               appeal._id === updatedAppeal._id
-                ? { status: updatedAppeal.status }
+                ? { ...appeal, status: updatedAppeal.status }
                 : appeal
             ),
           };

@@ -1,16 +1,12 @@
 import { useNavigate, useParams } from 'react-router-dom'
 import { ArrowLeft } from 'lucide-react'
 import LoadingSpinner from '../../components/LoadingSpinner'
-import { useQueryClient } from '@tanstack/react-query'
-import StarRating from '../../components/StarRating'
-import { useToggleUserStatus } from '../../utils/useApis/useUserApis/useToggleUserStatus'
 import { useFetchAppeal } from '../../utils/useApis/useAppealApis/useFetchAppeals'
 import { useToggleAppealStatus } from '../../utils/useApis/useAppealApis/useToggleAppealStatus'
 
 const Appeal = () => {
     const {id} = useParams()
     const navigate = useNavigate()
-    const queryClient = useQueryClient()
 
     const {data, isLoading} = useFetchAppeal(id)
 
@@ -59,12 +55,12 @@ const Appeal = () => {
           <div className='flex justify-between items-center bg-[#FFFFFF] border border-[#0000000D] py-6 px-4'>
             <div className='flex flex-col gap-3 pr-8'>
               <p className='font-medium text-base text-[#202224]'>Appeal ID</p>
-              <p className='font-medium text-base text-[#202224CC]'>{data?._id} </p>
+              <p className='font-medium text-base text-[#202224CC] max-w-30 truncate'>{data?._id} </p>
             </div>
             {data?.order &&
                 <div className='flex flex-col gap-3 pr-8'>
                 <p className='font-medium text-base text-[#202224]'>Order ID</p>
-                <p className='font-medium text-base text-[#202224CC]'>{data?.order}</p>
+                <p className='font-medium text-base text-[#202224CC] max-w-30 truncate'>{data?.order}</p>
                 </div>
             }
             <div className='flex flex-col gap-3 pr-8'>
@@ -73,16 +69,16 @@ const Appeal = () => {
             </div>
             <div className='flex flex-col gap-3 pr-8'>
               <p className='font-medium text-base text-[#202224]'>{data?.type ==='appeal' ?  `Buyer` : `User`}</p>
-              <p className='font-medium text-base text-[#202224CC]'>{data?.user?.firstName} {data?.user?.lastName}</p>
+              <p className='font-medium text-base text-[#202224CC] max-w-30 truncate'>{data?.user?.firstName} {data?.user?.lastName}</p>
             </div>
-            <div className='flex flex-col gap-3'>
+            <div className='flex flex-col gap-3 pr-8'>
               <p className='font-medium text-base text-[#202224]'>Date</p>
               <p className='font-medium text-base text-[#202224CC]'>{new Date(data?.createdAt).toLocaleDateString('en-GB')}</p>
             </div>
             {data?.seller &&
                 <div className='flex flex-col gap-3 pr-8'>
                 <p className='font-medium text-base text-[#202224]'>Seller</p>
-                <p className='font-medium text-base text-[#202224CC]'>data?.seller</p>
+                <p className='font-medium text-base text-[#202224CC] max-w-30 truncate'>{data?.seller?.firstName} {data?.seller?.lastName}</p>
                 </div>
             }
             <div className='flex flex-col gap-3 pr-8'>
@@ -93,6 +89,24 @@ const Appeal = () => {
             </div>
           </div>
         </div>
+
+        <div className='flex flex-col gap-4'>
+          <p className='font-medium text-lg text-[#000000]'>Description</p>
+
+          <p className='font-light text-base text-[#000000]'>{data?.description}</p>
+        </div>
+
+        {data?.attachments?.length > 0 &&
+          <div className='flex flex-col gap-4'>
+            <p className='font-medium text-lg text-[#000000]'>Images</p>
+
+            <div className='flex flex-wrap gap-4'>
+              {data.attachments.map((image)=>(
+                <img src={image?.url} alt="appeal images" className='w-80 h-80 object-cover'/>
+              ))}
+            </div>
+          </div>
+        }
     </div>
   )
 }

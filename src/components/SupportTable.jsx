@@ -2,10 +2,14 @@ import Input from '../components/Input'
 import { MoreVertical, Search } from 'lucide-react'
 import ItemTabs from './ItemTabs';
 import { useState, useEffect, useRef } from 'react';
+import { useToggleAppealStatus } from '../utils/useApis/useAppealApis/useToggleAppealStatus';
+import { useNavigate } from 'react-router-dom';
 
 const SupportTable = ({appeals=[], page=1, totalPages, setPage, itemsTabs, itemsActiveTab, setItemsActiveTab, search, setSearch}) => {
     const [openMenuId, setOpenMenuId] = useState(null);
     const menuRef = useRef(null);
+    const navigate = useNavigate()
+    const {toggleAppealStatus} = useToggleAppealStatus()
 
     useEffect(() => {
         const handleClickOutside = (e) => {
@@ -109,36 +113,42 @@ const SupportTable = ({appeals=[], page=1, totalPages, setPage, itemsTabs, items
                                 >
                                 <button
                                     onClick={() => {
-                                     
+                                     navigate(`/appeals/${a._id}`)
                                     }}
                                     className="block w-full text-left px-4 py-2 text-sm text-[#1C357E] hover:bg-gray-50"
                                 >
                                     View
                                 </button>
-                                <button
-                                    onClick={() => {
-                                     
-                                    }}
-                                    className="block w-full text-left px-4 py-2 text-sm text-[#1C357E] hover:bg-gray-50"
-                                >
-                                    Open
-                                </button>
-                                <button
-                                    onClick={() => {
-                                     
-                                    }}
-                                    className="block w-full text-left px-4 py-2 text-sm text-[#1C357E] hover:bg-gray-50"
-                                >
-                                    Close
-                                </button>
-                                <button
-                                    onClick={() => {
-                                     
-                                    }}
-                                    className="block w-full text-left px-4 py-2 text-sm text-[#1C357E] hover:bg-gray-50"
-                                >
-                                    Mark as resolved
-                                </button>
+                                {a.status !== 'open' && 
+                                    <button
+                                        onClick={async()=>{
+                                            await toggleAppealStatus(a._id, 'open')
+                                        }} 
+                                        className="block w-full text-left px-4 py-2 text-sm text-[#1C357E] hover:bg-gray-50"
+                                    >
+                                        Open
+                                    </button>
+                                }
+                                {a.status !== 'closed' && 
+                                    <button
+                                        onClick={async()=>{
+                                            await toggleAppealStatus(a._id, 'closed')
+                                        }} 
+                                        className="block w-full text-left px-4 py-2 text-sm text-[#1C357E] hover:bg-gray-50"
+                                    >
+                                        Close
+                                    </button>
+                                }
+                                {a.status !== 'resolved' && 
+                                    <button
+                                        onClick={async()=>{
+                                            await toggleAppealStatus(a._id, 'resolved')
+                                        }} 
+                                        className="block w-full text-left px-4 py-2 text-sm text-[#1C357E] hover:bg-gray-50"
+                                    >
+                                        Mark as resolved
+                                    </button>
+                                }
                                 </div>
                             )}
                         </td>
