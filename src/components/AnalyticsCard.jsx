@@ -1,4 +1,4 @@
-import { ArrowUpRight, ArrowDownRight, TrendingDown, TrendingUp } from "lucide-react";
+import { TrendingDown, TrendingUp } from "lucide-react";
 
 export default function AnalyticsCard({
   title,
@@ -22,6 +22,7 @@ export default function AnalyticsCard({
       </div>
 
       {/* Trend */}
+      {trendPercent && trendLabel && 
       <div
         className={`flex items-center mt-3 text-sm ${
           isUp ? "text-green-600" : "text-red-600"
@@ -36,7 +37,7 @@ export default function AnalyticsCard({
         <span className="ml-1 text-gray-500">
           {isUp ? "Up" : "Down"} {trendLabel}
         </span>
-      </div>
+      </div>}
     </div>
   );
 }

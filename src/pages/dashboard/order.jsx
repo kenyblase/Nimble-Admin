@@ -249,18 +249,6 @@ const handleStatus = (status)=>{
     </span>
   )
 }
-const handleVerification = (isVerified)=>{
-  if(isVerified) return (
-    <span className={`w-fit text-sm font-medium flex items-center gap-1 py-1 px-3 rounded-lg bg-[#DEF9D4] text-[#348352]`}>
-      Verified ID
-    </span>
-  )
-  else return (
-    <span className={`w-fit text-sm font-medium flex items-center gap-1 py-1 px-3 rounded-lg bg-[#F9D8D4] text-[#FF640F]`}>
-      Unverified ID
-    </span>
-  )
-}
 
 const formatDate = (date) => {
   if (!date) return '';
@@ -282,16 +270,6 @@ const formatDateLong = (date) => {
   const year = d.getFullYear();
 
   return `${day} ${month}, ${year}`;
-};
-
-const formatStatus = (status) => {
-  if (!status) return "active";
-
-  const normalized = status.trim().toLowerCase();
-
-  if (normalized === "review") return "pending";
-
-  return normalized;
 };
 
 const activeCheck = <svg width="24" height="26" viewBox="0 0 24 26" fill="none" xmlns="http://www.w3.org/2000/svg">

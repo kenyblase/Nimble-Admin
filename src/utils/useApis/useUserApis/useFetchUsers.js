@@ -15,8 +15,8 @@ const fetchUsers = async (api, page, limit, search, filter) => {
 const fetchUser = async (api, id) => {
   try {
     const res = await userApi.fetchUser(api, id);
-    const category = res.data
-    return category;
+    const user = res.data
+    return user;
   } catch (err) {
     console.log(err)
     return null;
