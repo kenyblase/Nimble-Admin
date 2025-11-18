@@ -27,11 +27,11 @@ const Payouts = () => {
   const payoutAnalytics = [
     {
       title: "Total Payout",
-      value: `₦${analytics?.totalPayout?.value}`,
+      value: `₦${analytics?.totalPayout?.value?.toLocaleString()}`,
     },
     {
       title: "Pending Payout",
-      value: `₦${analytics?.pendingPayout?.value}`,
+      value: `₦${analytics?.pendingPayout?.value?.toLocaleString()}`,
     }
   ];
 

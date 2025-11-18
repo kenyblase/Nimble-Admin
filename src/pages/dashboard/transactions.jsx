@@ -23,14 +23,14 @@ const Transactions = () => {
   const transactionAnalytics = [
     {
       title: "Total Pay-in",
-      value: analytics?.payIn?.value,
+      value: `₦${analytics?.payIn?.value?.toLocaleString()}`,
       trendPercent: analytics?.payIn?.change,
       trendDirection: analytics?.payIn?.trend,
       trendLabel: analytics?.payIn?.duration,
     },
     {
       title: "Total Pay-out",
-      value: analytics?.payOut?.value,
+      value: `₦${analytics?.payOut?.value?.toLocaleString()}`,
       trendPercent: analytics?.payOut?.change,
       trendDirection: analytics?.payOut?.trend,
       trendLabel: analytics?.payOut?.duration,

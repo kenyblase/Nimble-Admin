@@ -98,7 +98,7 @@ const RecentTransactionsTable = ({transactions=[], page=1, totalPages, setPage, 
                         <td className="p-5 border-b border-l border-r border-[#F5F5F5] font-normal text-sm text-[#071832]">{t.user.firstName} {t.user.lastName}</td>
                         <td className="p-5 border-b border-l border-r border-[#F5F5F5] font-normal text-sm text-[#071832]">{t?.buyer ? `${t.buyer.firstName} ${t.buyer.lastName}` : 'N/A'}</td>
                         <td className="p-5 border-b border-l border-r border-[#F5F5F5] font-normal text-sm text-[#071832]">{new Date(t.createdAt).toLocaleDateString('en-GB')}</td>
-                        <td className="p-5 border-b border-l border-r border-[#F5F5F5] font-medium text-sm text-[#000000]">#{t.amount.toLocaleString()}</td>
+                        <td className="p-5 border-b border-l border-r border-[#F5F5F5] font-medium text-sm text-[#000000]">₦{t.amount.toLocaleString()}</td>
                         <td className="p-5 border-b border-l border-r border-[#F5F5F5] font-normal text-sm">
                         {handleStatus(t.status)}
                         </td>
