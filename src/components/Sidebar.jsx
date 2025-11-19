@@ -34,7 +34,7 @@ const Sidebar = () => {
     { to: "/payouts", label: "Payout", icon: ArrowRightSquare },
     { to: "/categories", label: "Categories", icon: LayoutDashboard },
     { to: "/appeals", label: "Supports & Appeals", icon: Headset },
-    { to: "/analytics", label: "Analytics", icon: BarChart3 },
+    // { to: "/analytics", label: "Analytics", icon: BarChart3 },
     { to: "/reports", label: "Report and security", icon: AlertOctagon },
     { to: "/admins", label: "Admins management", icon: UserCog2 },
     { to: "/notifications", label: "Notifications", icon: Bell },
@@ -71,8 +71,8 @@ const Sidebar = () => {
                     </NavLink>
                 ))}
 
-                <div className="w-full">
-                    {/* Parent Item */}
+                {/* <div className="w-full">
+                    // Parent Item
                     <button
                         onClick={() => setOpen(!open)}
                         className="w-full flex items-center justify-between p-3 rounded-lg hover:bg-gray-100 transition"
@@ -84,7 +84,7 @@ const Sidebar = () => {
                         {open ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
                     </button>
 
-                    {/* Sub Items */}
+                    // Sub Items
                     {open && (
                         <div className="ml-10 mt-2 flex flex-col gap-2">
                         {subItems.map(({ to, label }) => (
@@ -102,7 +102,7 @@ const Sidebar = () => {
                         ))}
                         </div>
                     )}
-                    </div>
+                    </div> */}
 
                 {bottomNavItems.map(({ to, label, icon: Icon }) => (
                     <NavLink key={to} to={to} className="outline-none">

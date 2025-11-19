@@ -1,4 +1,8 @@
 import React, { useState } from "react";
+import ItemsTab from '../../components/ItemTabs'
+import { useGetSetting } from "../../utils/useApis/useSettingsApis/useGetSetting";
+import LoadingSpinner from '../../components/LoadingSpinner'
+import { useUpdateSetting } from "../../utils/useApis/useSettingsApis/useUpdateSetting";
 
 const Settings = () => {
   const [activeTab, setActiveTab] = useState("Payment Methods");
@@ -6,7 +10,7 @@ const Settings = () => {
   const tabs = [
     "Payment Methods",
     "Shipping Methods",
-    "Rules and regulations",
+    // "Rules and regulations",
     "Admins access control",
     "Notification settings",
   ];
@@ -17,8 +21,8 @@ const Settings = () => {
         return <PaymentMethods />;
       case "Shipping Methods":
         return <ShippingMethods />;
-      case "Rules and regulations":
-        return <RulesAndRegulations />;
+      // case "Rules and regulations":
+      //   return <RulesAndRegulations />;
       case "Admins access control":
         return <AdminsAccessControl />;
       case "Notification settings":
@@ -63,41 +67,100 @@ const Settings = () => {
 export default Settings;
 
 const PaymentMethods = () => {
+  const { data, isLoading } = useGetSetting('payment_methods')
+  const updateSetting = useUpdateSetting("payment_methods");
+
+  const paymentMethods = data?.value || [];
+
+  const toggleMethod = async(method) => {
+    const updated = paymentMethods.includes(method)
+      ? paymentMethods.filter((m) => m !== method)
+      : [...paymentMethods, method];
+
+    await updateSetting.mutateAsync(updated);
+  };
+
+  if(isLoading) return  <div className='w-full h-80 flex items-center justify-center'>
+                          <div className='w-20 h-20'>
+                            <LoadingSpinner size={'size-full'}/>
+                          </div>
+                        </div>
   return (
     <div className="flex flex-col gap-6">
       <h2 className="text-2xl font-medium text-[#000000]">
         Payment Methods
       </h2>
+      
       <div className="flex flex-col gap-4">
-        <div className="flex justify-between py-2">
-            <div className="flex gap-2 items-center">
-                <input type="checkbox" className="accent-[#0085FF] h-3 w-3 cursor-pointer"/>
 
-                <p className="text-xs font-normal text-[#000000CC]">Wallet balance</p>
-            </div>
+        {/* Wallet balance */}
+        <div className="flex justify-between py-2">
+          <div className="flex gap-2 items-center">
+            <input
+              type="checkbox"
+              value="wallet_balance"
+              checked={paymentMethods.includes("wallet_balance")}
+              className="accent-[#0085FF] h-3 w-3 cursor-pointer"
+              onChange={() => toggleMethod("wallet_balance")}
+            />
+            <p className="text-xs font-normal text-[#000000CC]">Wallet balance</p>
+          </div>
         </div>
+
+        {/* Crypto */}
         <div className="flex justify-between w-[368px] py-2">
-            <div className="flex gap-2 items-center">
-                <input type="checkbox" className="accent-[#0085FF] h-3 w-3 cursor-pointer"/>
+          <div className="flex gap-2 items-center">
+            <input
+              type="checkbox"
+              value="crypto"
+              checked={paymentMethods.includes("crypto")}
+              className="accent-[#0085FF] h-3 w-3 cursor-pointer"
+              onChange={() => toggleMethod("crypto")}
+            />
+            <p className="text-xs font-normal text-[#000000CC]">Crypto currency</p>
+          </div>
 
-                <p className="text-xs font-normal text-[#000000CC]">Crypto currency</p>
-            </div>
-
-            {cryptoIconGroup}
+          {cryptoIconGroup}
         </div>
+
+        {/* Bank transfer */}
         <div className="flex justify-between py-2">
-            <div className="flex gap-2 items-center">
-                <input type="checkbox" className="accent-[#0085FF] h-3 w-3 cursor-pointer"/>
-
-                <p className="text-xs font-normal text-[#000000CC]">Bank transfer</p>
-            </div>
+          <div className="flex gap-2 items-center">
+            <input
+              type="checkbox"
+              value="bank_transfer"
+              checked={paymentMethods.includes("bank_transfer")}
+              className="accent-[#0085FF] h-3 w-3 cursor-pointer"
+              onChange={() => toggleMethod("bank_transfer")}
+            />
+            <p className="text-xs font-normal text-[#000000CC]">Bank transfer</p>
+          </div>
         </div>
+
       </div>
     </div>
   );
 };
 
 const ShippingMethods = () => {
+  const { data, isLoading } = useGetSetting('shipping_methods')
+  const updateSetting = useUpdateSetting("shipping_methods");
+
+  const shippingMethods = data?.value || [];
+
+  const toggleMethod = async(method) => {
+    const updated = shippingMethods.includes(method)
+      ? shippingMethods.filter((m) => m !== method)
+      : [...shippingMethods, method];
+
+    await updateSetting.mutateAsync(updated);
+  };
+
+  if(isLoading) return  <div className='w-full h-80 flex items-center justify-center'>
+                          <div className='w-20 h-20'>
+                            <LoadingSpinner size={'size-full'}/>
+                          </div>
+                        </div>
   return (
     <div className="flex flex-col gap-6">
       <h2 className="text-2xl font-medium text-[#000000]">
@@ -106,21 +169,39 @@ const ShippingMethods = () => {
       <div className="flex flex-col gap-4">
         <div className="flex justify-between py-2">
             <div className="flex gap-2 items-center">
-                <input type="checkbox" className="accent-[#0085FF] h-3 w-3 cursor-pointer"/>
+                <input
+                  type="checkbox"
+                  value="bank_transfer"
+                  checked={shippingMethods.includes("pickup")}
+                  className="accent-[#0085FF] h-3 w-3 cursor-pointer"
+                  onChange={() => toggleMethod("pickup")}
+                />
 
                 <p className="text-xs font-normal text-[#000000CC]">Pickup</p>
             </div>
         </div>
         <div className="flex justify-between w-[368px] py-2">
             <div className="flex gap-2 items-center">
-                <input type="checkbox" className="accent-[#0085FF] h-3 w-3 cursor-pointer"/>
+                <input
+                  type="checkbox"
+                  value="bank_transfer"
+                  checked={shippingMethods.includes("waybill")}
+                  className="accent-[#0085FF] h-3 w-3 cursor-pointer"
+                  onChange={() => toggleMethod("waybill")}
+                />
 
                 <p className="text-xs font-normal text-[#000000CC]">Waybill</p>
             </div>
         </div>
         <div className="flex justify-between py-2">
             <div className="flex gap-2 items-center">
-                <input type="checkbox" className="accent-[#0085FF] h-3 w-3 cursor-pointer"/>
+                <input
+                  type="checkbox"
+                  value="bank_transfer"
+                  checked={shippingMethods.includes("delivery")}
+                  className="accent-[#0085FF] h-3 w-3 cursor-pointer"
+                  onChange={() => toggleMethod("delivery")}
+                />
 
                 <p className="text-xs font-normal text-[#000000CC]">Delivery</p>
             </div>
@@ -144,136 +225,189 @@ const RulesAndRegulations = () => {
 };
 
 const AdminsAccessControl = () => {
+  const { data, isLoading } = useGetSetting("admin_roles");
+  const updateSetting = useUpdateSetting("admin_roles");
+
+  if (isLoading) return <div className='w-full h-80 flex items-center justify-center'>
+                          <div className='w-20 h-20'>
+                            <LoadingSpinner size={'size-full'}/>
+                          </div>
+                        </div>
+
+  const roles = data?.value || [];
+
+  const togglePermission = (roleName, permission) => {
+    const updatedRoles = roles.map((role) => {
+      if (role.role !== roleName) return role;
+
+      return {
+        ...role,
+        permissions: role.permissions.includes(permission)
+          ? role.permissions.filter((p) => p !== permission)
+          : [...role.permissions, permission],
+      };
+    });
+
+    updateSetting.mutate(updatedRoles);
+  };
+
   return (
     <div className="flex flex-col gap-6">
-      <h2 className="text-2xl font-medium text-[#000000]">
-        Admin Control
-      </h2>
-      <div className="flex gap-8 items-center">
-        <div className="flex flex-col gap-4">
-            <p className="text-base font-medium text-[#000000]">Admin</p>
+      <h2 className="text-2xl font-medium text-[#000000]">Admin Control</h2>
+
+      <div className="flex gap-8 items-start">
+        {roles.map((role) => (
+          <div key={role.role} className="flex flex-col gap-4">
+            <p className="text-base font-medium text-[#000000]">
+              {role.role}
+            </p>
 
             <div className="flex flex-col gap-4">
-                <div className="flex gap-2 items-center">
-                    <input type="checkbox" className="accent-[#0085FF] h-3 w-3 cursor-pointer"/>
-
-                    <p className="text-xs font-normal text-[#000000CC]">Mediate in dispute</p>
+              {PERMISSIONS.map((permission) => (
+                <div
+                  key={permission}
+                  className="flex gap-2 items-center"
+                >
+                  <input
+                    type="checkbox"
+                    className="accent-[#0085FF] h-3 w-3 cursor-pointer"
+                    checked={role.permissions.includes(permission)}
+                    onChange={() =>
+                      togglePermission(role.role, permission)
+                    }
+                  />
+                  <p className="text-xs font-normal text-[#000000CC]">
+                    {PERMISSION_LABELS[permission]}
+                  </p>
                 </div>
-                <div className="flex gap-2 items-center">
-                    <input type="checkbox" className="accent-[#0085FF] h-3 w-3 cursor-pointer"/>
-
-                    <p className="text-xs font-normal text-[#000000CC]">Read and respond to messages</p>
-                </div>
-                <div className="flex gap-2 items-center">
-                    <input type="checkbox" className="accent-[#0085FF] h-3 w-3 cursor-pointer"/>
-
-                    <p className="text-xs font-normal text-[#000000CC]">View listing</p>
-                </div>
-                <div className="flex gap-2 items-center">
-                    <input type="checkbox" className="accent-[#0085FF] h-3 w-3 cursor-pointer"/>
-
-                    <p className="text-xs font-normal text-[#000000CC]">Reject or approve listing</p>
-                </div>
-                <div className="flex gap-2 items-center">
-                    <input type="checkbox" className="accent-[#0085FF] h-3 w-3 cursor-pointer"/>
-
-                    <p className="text-xs font-normal text-[#000000CC]">See transactions</p>
-                </div>
-                <div className="flex gap-2 items-center">
-                    <input type="checkbox" className="accent-[#0085FF] h-3 w-3 cursor-pointer"/>
-
-                    <p className="text-xs font-normal text-[#000000CC]">Approve payout requests</p>
-                </div>
+              ))}
             </div>
-        </div>
-        <div className="flex flex-col gap-4">
-            <p className="text-base font-medium text-[#000000]">Moderator</p>
-
-            <div className="flex flex-col gap-4">
-                <div className="flex gap-2 items-center">
-                    <input type="checkbox" className="accent-[#0085FF] h-3 w-3 cursor-pointer"/>
-
-                    <p className="text-xs font-normal text-[#000000CC]">Mediate in dispute</p>
-                </div>
-                <div className="flex gap-2 items-center">
-                    <input type="checkbox" className="accent-[#0085FF] h-3 w-3 cursor-pointer"/>
-
-                    <p className="text-xs font-normal text-[#000000CC]">Read and respond to messages</p>
-                </div>
-                <div className="flex gap-2 items-center">
-                    <input type="checkbox" className="accent-[#0085FF] h-3 w-3 cursor-pointer"/>
-
-                    <p className="text-xs font-normal text-[#000000CC]">View listing</p>
-                </div>
-                <div className="flex gap-2 items-center">
-                    <input type="checkbox" className="accent-[#0085FF] h-3 w-3 cursor-pointer"/>
-
-                    <p className="text-xs font-normal text-[#000000CC]">Reject or approve listing</p>
-                </div>
-                <div className="flex gap-2 items-center">
-                    <input type="checkbox" className="accent-[#0085FF] h-3 w-3 cursor-pointer"/>
-
-                    <p className="text-xs font-normal text-[#000000CC]">See transactions</p>
-                </div>
-                <div className="flex gap-2 items-center">
-                    <input type="checkbox" className="accent-[#0085FF] h-3 w-3 cursor-pointer"/>
-
-                    <p className="text-xs font-normal text-[#000000CC]">Approve payout requests</p>
-                </div>
-            </div>
-        </div>
-        <div className="flex flex-col gap-4">
-            <p className="text-base font-medium text-[#000000]">Editor</p>
-
-            <div className="flex flex-col gap-4">
-                <div className="flex gap-2 items-center">
-                    <input type="checkbox" className="accent-[#0085FF] h-3 w-3 cursor-pointer"/>
-
-                    <p className="text-xs font-normal text-[#000000CC]">Mediate in dispute</p>
-                </div>
-                <div className="flex gap-2 items-center">
-                    <input type="checkbox" className="accent-[#0085FF] h-3 w-3 cursor-pointer"/>
-
-                    <p className="text-xs font-normal text-[#000000CC]">Read and respond to messages</p>
-                </div>
-                <div className="flex gap-2 items-center">
-                    <input type="checkbox" className="accent-[#0085FF] h-3 w-3 cursor-pointer"/>
-
-                    <p className="text-xs font-normal text-[#000000CC]">View listing</p>
-                </div>
-                <div className="flex gap-2 items-center">
-                    <input type="checkbox" className="accent-[#0085FF] h-3 w-3 cursor-pointer"/>
-
-                    <p className="text-xs font-normal text-[#000000CC]">Reject or approve listing</p>
-                </div>
-                <div className="flex gap-2 items-center">
-                    <input type="checkbox" className="accent-[#0085FF] h-3 w-3 cursor-pointer"/>
-
-                    <p className="text-xs font-normal text-[#000000CC]">See transactions</p>
-                </div>
-                <div className="flex gap-2 items-center">
-                    <input type="checkbox" className="accent-[#0085FF] h-3 w-3 cursor-pointer"/>
-
-                    <p className="text-xs font-normal text-[#000000CC]">Approve payout requests</p>
-                </div>
-            </div>
-        </div>
+          </div>
+        ))}
       </div>
     </div>
   );
 };
 
 const NotificationSettings = () => {
+  const [itemsActiveTab, setItemsActiveTab] = useState('In-App')
+  const currentTab = itemsActiveTab === "In-App" ? "inApp" : "email";
+  const { data, isLoading } = useGetSetting("notification_settings");
+  const updateSetting = useUpdateSetting("notification_settings");
+  const currentSettings = data?.value || {};
+
+  if (isLoading) return <div className='w-full h-80 flex items-center justify-center'>
+                          <div className='w-20 h-20'>
+                            <LoadingSpinner size={'size-full'}/>
+                          </div>
+                        </div>
+
+
+  const itemsTabs = [
+    {label: 'In-App'},
+    {label: 'Email'}
+  ]
+
+  const handleToggle = async(category, field) => {
+    const updatedValue = {
+      ...currentSettings,
+      [currentTab]: {
+        ...currentSettings[currentTab],
+        [category]: {
+          ...currentSettings[currentTab][category],
+          [field]: !currentSettings[currentTab][category][field],
+        },
+      },
+    };
+
+    await updateSetting.mutateAsync(updatedValue);
+  };
+
   return (
     <div className="flex flex-col gap-6">
       <h2 className="text-2xl font-medium text-[#000000]">
         Notification Settings
       </h2>
-      <p className="text-sm text-gray-600">
-        Choose how and when users and admins receive platform notifications.
-      </p>
+      
+      <ItemsTab itemsActiveTab={itemsActiveTab} ItemsTabs={itemsTabs} setItemsActiveTab={setItemsActiveTab}/>
+
+      {Object.entries(NOTIFICATION_SECTIONS).map(([sectionName, config]) => (
+        <div key={sectionName} className="flex flex-col gap-4 w-full">
+          <p className="font-medium text-base text-[#000000]">{sectionName}</p>
+
+          <div className="flex flex-col gap-3">
+            {Object.entries(config.items).map(([field, label]) => {
+              const checked =
+                currentSettings?.[currentTab]?.[config.tabKey]?.[field];
+
+              return (
+                <div key={field} className="flex justify-between items-center">
+                  <p className="text-[#000000] text-xs font-light">{label}</p>
+
+                  <label className="relative inline-flex items-center cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={checked}
+                      onChange={() => handleToggle(config.tabKey, field)}
+                      className="sr-only peer"
+                    />
+
+                    <div className="w-12 h-6 bg-gray-300 rounded-full peer peer-checked:bg-[#3652AD] transition-all duration-300"></div>
+                    <div className="absolute left-[2px] top-[2px] bg-white w-5 h-5 rounded-full transition-all duration-300 peer-checked:translate-x-6 shadow-md"></div>
+                  </label>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      ))}
     </div>
   );
+};
+
+const PERMISSIONS = [
+  "mediate_chat",
+  "message_response",
+  "view_listing",
+  "listing_approval",
+  "view_transactions",
+  "payout_approval"
+];
+
+const PERMISSION_LABELS = {
+  mediate_chat: "Mediate in dispute",
+  message_response: "Read and respond to messages",
+  view_listing: "View listing",
+  listing_approval: "Reject or approve listing",
+  view_transactions: "See transactions",
+  payout_approval: "Approve payout requests",
+};
+
+const NOTIFICATION_SECTIONS = {
+  Admin: {
+    tabKey: "admin",
+    items: {
+      messages: "Messages",
+      disputes: "Disputes",
+      supportRequest: "Support Request",
+    },
+  },
+  User: {
+    tabKey: "user",
+    items: {
+      messages: "Messages",
+      transactions: "Transactions",
+      listing: "Listing",
+    },
+  },
+  "Security and maintenance": {
+    tabKey: "security",
+    items: {
+      userAccountChanges: "User account changes",
+      bugFix: "Error or bug fix",
+      maintenance: "System maintenance schedule",
+    },
+  },
 };
 
 const cryptoIconGroup = <svg width="108" height="24" viewBox="0 0 108 24" fill="none" xmlns="http://www.w3.org/2000/svg">
