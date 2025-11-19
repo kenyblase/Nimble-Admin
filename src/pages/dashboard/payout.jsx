@@ -3,12 +3,17 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { useFetchPayout } from '../../utils/useApis/usePayoutApis/useFetchPayouts'
 import LoadingSpinner from '../../components/LoadingSpinner'
 import { ArrowLeft, Edit } from 'lucide-react'
+import { useApprovePayout } from '../../utils/useApis/usePayoutApis/useApprovePayout'
+import { useRejectPayout } from '../../utils/useApis/usePayoutApis/useRejectPayout'
 
 const Payout = () => {
   const {id} = useParams()
   const navigate = useNavigate()
 
   const {data, isLoading} = useFetchPayout(id)
+
+  const { approvePayout, isApproving } = useApprovePayout()
+  const { rejectPayout, isRejecting } = useRejectPayout()
 
   if(isLoading) return <LoadingSpinner/>
   return (
@@ -22,23 +27,27 @@ const Payout = () => {
                         </div>
                     </div>
                     <div className='flex gap-6'>
-                      <div  
+                      {/* <div  
                           onClick={() =>{ 
 
                           }}
                           className='bg-[#D3E4FE4D] size-11 border border-[#3652AD] rounded-full flex items-center justify-center cursor-pointer'>
                           <Edit color='#3652AD' size={20}/>
-                      </div>
-                      {
-                        <div onClick={async()=>{
+                      </div> */}
+                      {data?.status === 'PENDING' &&
+                        <button onClick={async()=>{
+                              rejectPayout(id)
                             }} 
+                            disabled={isRejecting}
                             className='h-11 border border-[#B91C1C] px-5 flex items-center justify-center rounded-full cursor-pointer'>
                             <p className='text-[#B91C1C] font-semibold text-base'>Reject</p>
-                        </div>
+                        </button>
                       }
-                      {
+                      {data?.status === 'PENDING' &&
                         <div onClick={async() =>{
+                              approvePayout(id)
                             }}
+                            disabled={isApproving}
                             className='h-11 bg-[#489766] px-5 flex items-center justify-center rounded-full cursor-pointer'>
                             <p className='text-[#FEFEFF] font-semibold text-base'>Approve</p>
                         </div>

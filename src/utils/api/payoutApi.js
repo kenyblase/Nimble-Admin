@@ -8,7 +8,16 @@ export const payoutApi = {
   fetchPayoutAnalytics: async (api) => {
     return api.get(`/admin/payouts/analytics`);
   },
-  fetchUserListings: async (api, id, page, limit, status) => {
-    return api.get(`/admin/listings/products/user/${id}?page=${page}&limit=${limit}&status=${status}`);
+  createPayout: async (api, data) => {
+    return api.post(`/admin/payouts/create`, data);
+  },
+  togglePayoutStatus: async (api, id, status) =>{
+    return api.put(`admin/payouts/${id}/status`, { status })
+  },
+  approvePayout: async (api, id) =>{
+    return api.put(`admin/payouts/accept/${id}`)
+  },
+  rejectPayout: async (api, id) =>{
+    return api.put(`admin/payouts/reject/${id}`)
   },
 };

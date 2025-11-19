@@ -2,7 +2,8 @@ import { useState, useRef, useEffect } from "react";
 import Input from "../components/Input";
 import { MoreVertical, Search } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { useToggleUserStatus } from "../utils/useApis/useUserApis/useToggleUserStatus";
+import { useRejectPayout } from "../utils/useApis/usePayoutApis/useRejectPayout";
+import { useApprovePayout } from "../utils/useApis/usePayoutApis/useApprovePayout";
 
 const PayoutsTable = ({
   payouts = [],
@@ -16,7 +17,8 @@ const PayoutsTable = ({
   const menuRef = useRef(null);
   const navigate = useNavigate()
 
-  const {toggleUserStatus} = useToggleUserStatus()
+  const { approvePayout, isApproving } = useApprovePayout()
+  const { rejectPayout, isRejecting } = useRejectPayout()
 
   // close menu when clicked outside
   useEffect(() => {
@@ -100,7 +102,7 @@ const PayoutsTable = ({
                       ₦{payout?.amount}
                     </td>
                     <td className="p-5 border-b border-l border-r border-[#F5F5F5] text-sm text-[#071832]">
-                      {handleStatus(payout?.status?.toLowerCase())}
+                      {handleStatus(payout?.status)}
                     </td>
                     <td className="p-5 border-b border-l border-r border-[#F5F5F5] text-center relative">
                       <button
@@ -125,7 +127,7 @@ const PayoutsTable = ({
                           >
                             View
                           </button>
-                          <button
+                          {/* <button
                             onClick={async()=>{
                               await togglepayoutStatus(payout._id, 'suspended')
                               setOpenMenuId(null)
@@ -133,24 +135,31 @@ const PayoutsTable = ({
                             className="block w-full text-left px-4 py-2 text-sm text-[#1C357E] hover:bg-gray-50"
                           >
                             Edit
-                          </button>
+                          </button> */}
+                         {payout?.status === 'PENDING' &&
+                         <> 
                           <button
-                            onClick={async()=>{
-                              await togglepayoutStatus(payout._id, 'banned')
-                              setOpenMenuId(null)
-                            }} 
-                            className="block w-full text-left px-4 py-2 text-sm text-[#1C357E] hover:bg-gray-50"
-                          >
-                            Approve
-                          </button>
-                          <button
-                            onClick={() =>{
-                              navigate(`/payouts/${id}/edit`)
-                            }}
-                            className="block w-full text-left px-4 py-2 text-sm text-[#DC2626] hover:bg-gray-50"
-                          >
-                            Reject
-                          </button>
+                              onClick={async()=>{
+                                await approvePayout(payout._id)
+                                setOpenMenuId(null)
+                              }} 
+                              disabled={isApproving}
+                              className="block w-full text-left px-4 py-2 text-sm text-[#1C357E] hover:bg-gray-50"
+                            >
+                              Approve
+                            </button>
+                            <button
+                              onClick={async()=>{
+                                await rejectPayout(payout._id)
+                                setOpenMenuId(null)
+                              }} 
+                              disabled={isRejecting}
+                              className="block w-full text-left px-4 py-2 text-sm text-[#DC2626] hover:bg-gray-50"
+                            >
+                              Reject
+                            </button>
+                          </>
+                          }
                         </div>
                       )}
                     </td>
@@ -227,17 +236,17 @@ export default PayoutsTable;
 const handleStatus = (status)=>{
   if(status === 'APPROVED' || status === 'SUCCESS') return (
     <span className={`w-fit text-sm font-medium flex items-center gap-1 py-1 px-3 rounded-lg bg-[#DEF9D4] text-[#348352]`}>
-      {status}
+      {status?.toLowerCase()}
     </span>
   )
   else if(status === 'REJECTED' || status === 'FAILED') return (
     <span className={`w-fit text-sm font-medium flex items-center gap-1 py-1 px-3 rounded-lg bg-[#F9D8D4] text-[#FF640F]`}>
-      {status}
+      {status?.toLowerCase()}
     </span>
   )
   else  return (
     <span className={`w-fit text-sm font-medium flex items-center gap-1 py-1 px-3 rounded-lg bg-[#F9EDD4] text-[#FF8911]`}>
-      {status}
+      {status?.toLowerCase()}
     </span>
   )
 }

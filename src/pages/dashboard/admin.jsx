@@ -1,5 +1,4 @@
 import { Plus } from 'lucide-react'
-import { useNavigate } from 'react-router-dom'
 import AdminTable from '../../components/AdminTable'
 import { useFetchAllAdmins } from '../../utils/useApis/useAdminApis/useFetchAllAdmin'
 import { useState } from 'react'
@@ -7,7 +6,7 @@ import LoadingSpinner from '../../components/LoadingSpinner'
 import { useEffect } from 'react'
 import AddAdminModal from '../../components/AddAdminModal'
 
-const Categories = () => {
+const Admin = () => {
   const [page, setPage] = useState(1)
   const [search, setSearch] = useState('')
   const [debouncedSearch, setDebouncedSearch] = useState("");
@@ -55,4 +54,4 @@ const Categories = () => {
   )
 }
 
-export default Categories
+export default Admin
