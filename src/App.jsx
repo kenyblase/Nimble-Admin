@@ -22,14 +22,16 @@ import CreateCategory from './pages/dashboard/createCategory';
 import EditCategory from './pages/dashboard/editCategory';
 import Admin from './pages/dashboard/admin';
 import Settings from './pages/dashboard/settings';
+import Appeals from './pages/dashboard/appeals';
+import Appeal from './pages/dashboard/appeal';
+import Payout from './pages/dashboard/payout';
+import Reports from './pages/dashboard/reports';
+import Report from './pages/dashboard/report';
 
 import { useCheckAuth } from './utils/useApis/useAuthApis/useCheckAuth';
 import { useAuthStore } from './utils/api/store/useAuthStore';
 
 import LoadingSpinner from './components/LoadingSpinner'
-import Appeals from './pages/dashboard/appeals';
-import Appeal from './pages/dashboard/appeal';
-import Payout from './pages/dashboard/payout';
 
 const ProtectedRoute = ({ children }) => {
   const admin = useAuthStore((state) => state.admin);
@@ -78,6 +80,8 @@ function App() {
           <Route path="/admins" element={<ProtectedRoute><Admin/></ProtectedRoute>} />
           <Route path="/appeals" element={<ProtectedRoute><Appeals/></ProtectedRoute>} />
           <Route path="/appeals/:id" element={<ProtectedRoute><Appeal/></ProtectedRoute>} />
+          <Route path="/reports" element={<ProtectedRoute><Reports/></ProtectedRoute>} />
+          <Route path="/reports/:id" element={<ProtectedRoute><Report/></ProtectedRoute>} />
           <Route path="/settings" element={<ProtectedRoute><Settings/></ProtectedRoute>} />
         </Route>
 
