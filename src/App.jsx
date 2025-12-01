@@ -32,6 +32,7 @@ import { useCheckAuth } from './utils/useApis/useAuthApis/useCheckAuth';
 import { useAuthStore } from './utils/api/store/useAuthStore';
 
 import LoadingSpinner from './components/LoadingSpinner'
+import Notifications from './pages/dashboard/notifications';
 
 const ProtectedRoute = ({ children }) => {
   const admin = useAuthStore((state) => state.admin);
@@ -83,6 +84,7 @@ function App() {
           <Route path="/reports" element={<ProtectedRoute><Reports/></ProtectedRoute>} />
           <Route path="/reports/:id" element={<ProtectedRoute><Report/></ProtectedRoute>} />
           <Route path="/settings" element={<ProtectedRoute><Settings/></ProtectedRoute>} />
+          <Route path="/notifications" element={<ProtectedRoute><Notifications/></ProtectedRoute>} />
         </Route>
 
       </Routes>
